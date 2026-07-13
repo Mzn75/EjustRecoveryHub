@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Ignore user-uploaded lost item photos
+wwwroot/uploads/*
+!wwwroot/uploads/.keep

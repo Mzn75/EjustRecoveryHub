@@ -1,5 +1,5 @@
-using EjustRecoveryHub.Models;
 using Microsoft.AspNetCore.Mvc;
+using EjustRecoveryHub.Models;
 using System.Diagnostics;
 
 namespace EjustRecoveryHub.Controllers
@@ -11,7 +11,7 @@ namespace EjustRecoveryHub.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Error404()
         {
             return View();
         }
