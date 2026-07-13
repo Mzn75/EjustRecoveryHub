@@ -1,8 +1,71 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<head>
+    <title>E-JUST Recovery Hub</title>
+</head>
+
+<!-- Sidebar Button -->
+<button class="mobile-menu-btn d-lg-none">
+    <i class="fas fa-bars"></i>
+</button>
+
+<div class="glass-container">
+    <main class="main-content">
+        <div class="content-header">
+            <div class="welcome-section">
+                <h2>Welcome to E-JUST Recovery Hub</h2>
+                <p>Find your lost items and report found items easily</p>
+            </div>
+        </div>
+
+        <div class="elements-grid">
+
+            <!--Lost Items Page-->
+            <div class="element-card">
+                <div class="card-header">
+                    <img src="@Url.Content("~/img/lost.svg")" alt="Lost Items" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">I Lost an item</h3>
+                    </div>
+                    <span class="card-badge">Find your items</span>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">
+                        Search for your lost items and connect with finders to recover them quickly and easily.
+                    </p>
+                    <div class="card-actions">
+                        <a href="@Url.Action("LostItems", "Items")" class="btn-primary">
+                            <i class="fas fa-search me-2"></i>
+                            Search Lost Items
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!--Found Items Page-->
+            <div class="element-card">
+                <div class="card-header">
+                    <img src="@Url.Content("~/img/found.svg")" alt="Found Items" class="card-image">
+                    <div class="card-overlay">
+                        <h3 class="card-title">I Found an item</h3>
+                    </div>
+                    <span class="card-badge">Report items</span>
+                </div>
+                <div class="card-content">
+                    <p class="card-description">
+                        Report found items and help others recover their lost belongings.
+                    </p>
+                    <div class="card-actions">
+                        <a href="@Url.Action("FoundItems", "Items")" class="btn-primary">
+                            <i class="fa-solid fa-box-open me-2"></i>
+                            Report Found Item
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
 </div>

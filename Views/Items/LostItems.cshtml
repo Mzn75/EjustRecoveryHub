@@ -1,0 +1,183 @@
+﻿@{
+	ViewData["Title"] = "Lost Items";
+}
+
+<head>
+	<title>Search Lost Items</title>
+</head>
+
+<!-- Mobile Menu Button -->
+<button class="mobile-menu-btn d-lg-none">
+	<i class="fas fa-bars"></i>
+</button>
+
+<div class="glass-container">
+
+	<main class="main-content">
+
+		<div class="content-header welcome-section">
+			<h2>Search For Your Lost Items</h2>
+			<p>Select what you lost to provide specific details.</p>
+		</div>
+
+		<div class="search-wrapper">
+
+			<form asp-controller="Search" asp-action="Search" method="get" class="custom-search-form form-stacked">
+
+				<!-- Item Category -->
+				<div class="custom-dropdown-wrapper mb-4">
+
+					<div class="search-input-group custom-dropdown-trigger" id="customDropdownTrigger">
+						<i class="fa-solid fa-layer-group search-icon"></i>
+						<span class="dropdown-selected-text">  Choose Item Type  </span>
+						<i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+					</div>
+
+					<div class="custom-dropdown-menu" id="customDropdownMenu">
+
+						<div class="custom-option" data-value="id">
+							ID Card
+						</div>
+
+						<div class="custom-option" data-value="wallet">
+							Wallet
+						</div>
+
+						<div class="custom-option" data-value="device">
+							Electronic Device
+						</div>
+
+						<div class="custom-option" data-value="jewelry">
+							Jewelry
+						</div>
+
+						<div class="custom-option" data-value="notebook">
+							Notebook
+						</div>
+					</div>
+
+					<select id="itemCategory" name="Category" required style="display: none;">
+						<option value="" disabled selected>-- Choose Item Type --</option>
+						<option value="id">ID Card</option>
+						<option value="wallet">Wallet</option>
+						<option value="device">Electronic Device</option>
+						<option value="jewelry">Jewelry</option>
+						<option value="notebook">Notebook</option>
+					</select>
+
+				</div>
+
+				<!-- Dynamic Fields Container -->
+				<div id="dynamicFieldsContainer" style="display: none;">
+
+					<!-- ID Card Fields -->
+					<div id="fields-id" class="dynamic-group">
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-id-card search-icon"></i>
+							<input type="text" name="IdName" class="search-input dynamic-input" placeholder="Name written on the ID" />
+						</div>
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-hashtag search-icon"></i>
+							<input type="text" name="IdNumber" class="search-input dynamic-input" placeholder="ID Number / Student ID" />
+						</div>
+
+					</div>
+
+					<!-- Wallet Fields -->
+					<div id="fields-wallet" class="dynamic-group">
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-palette search-icon"></i>
+							<input type="text" name="WalletColor" class="search-input dynamic-input" placeholder="Color (e.g., Black, Brown)" />
+						</div>
+
+						<div class="search-input-group mb-3">
+							<i class="fa-brands fa-cc-visa search-icon"></i>
+							<input type="text" name="WalletBrandOrMaterial" class="search-input dynamic-input" placeholder="Brand or Material (e.g., Leather)" />
+						</div>
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-align-left search-icon"></i>
+							<input type="text" name="WalletDescription" class="search-input dynamic-input" placeholder="Description (e.g., Custom Design, Special Mark, Color)" />
+						</div>
+
+					</div>
+
+					<!-- Device Fields -->
+					<div id="fields-device" class="dynamic-group">
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-mobile-screen search-icon"></i>
+							<input type="text" name="DeviceBrand" class="search-input dynamic-input" placeholder="Brand (e.g., Samsung, Apple)" />
+						</div>
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-microchip search-icon"></i>
+							<input type="text" name="DeviceModel" class="search-input dynamic-input" placeholder="Model (e.g., Iphone 15)" />
+						</div>
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-align-left search-icon"></i>
+							<input type="text" name="DeviceDescription" class="search-input dynamic-input" placeholder="Description (e.g., Cover Shape, Wallpaper, Color)" />
+						</div>
+
+					</div>
+
+					<!-- Jewelry Fields -->
+					<div id="fields-jewelry" class="dynamic-group">
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-ring search-icon"></i>
+							<input type="text" name="JewelryType" class="search-input dynamic-input" placeholder="Type (e.g., Ring, Necklace)" />
+						</div>
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-gem search-icon"></i>
+							<input type="text" name="JewelryMaterial" class="search-input dynamic-input" placeholder="Material (e.g., Gold, Silver)" />
+						</div>
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-align-left search-icon"></i>
+							<input type="text" name="JewelryDescription" class="search-input dynamic-input" placeholder="Description (e.g., Engraving, Gemstone, Color)" />
+						</div>
+
+					</div>
+
+					<!-- Notebook Fields -->
+					<div id="fields-notebook" class="dynamic-group">
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-book search-icon"></i>
+							<input type="text" name="NotebookColor" class="search-input dynamic-input" placeholder="Color (e.g., Red, Blue)" />
+						</div>
+
+						<div class="search-input-group mb-3">
+							<i class="fa-solid fa-align-left search-icon"></i>
+							<input type="text" name="NotebookDescription" class="search-input dynamic-input" placeholder="Description (e.g., Name, Shape, Special Marks)" />
+						</div>
+
+					</div>
+
+					<!-- "Other" Category is removed but the css code is still available  -->
+
+					<!-- Location Field -->
+					<hr class="form-divider" />
+					<div class="search-input-group mb-4">
+
+						<i class="fa-solid fa-location-dot search-icon"></i>
+						<input type="text" name="LocationFound" class="search-input" placeholder="Where did you lose it?" required />
+
+					</div>
+
+					<!-- Search Button -->
+					<button type="submit" class="search-btn w-100">
+						<i class="fa-solid fa-magnifying-glass me-2"></i> Search
+					</button>
+
+				</div>
+			</form>
+		</div>
+	</main>
+</div>

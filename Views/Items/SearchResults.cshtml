@@ -1,0 +1,126 @@
+﻿@{
+    ViewData["Title"] = "Search";
+}
+
+@model IEnumerable<EjustRecoveryHub.Models.ItemModel>
+
+<button class="mobile-menu-btn d-lg-none">
+    <i class="fas fa-bars"></i>
+</button>
+
+<div class="glass-container">
+    <main class="main-content">
+        <div class="content-header welcome-section mb-4">
+            <h2>Search Results</h2>
+            <p>Here is what we found matching your search.</p>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="elements-grid">
+
+                @foreach (var item in Model)
+                {
+                    <div class="element-card" style="padding: 1.5rem;">
+                        <div class="card-content" style="padding: 0;">
+
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                                <h3 class="card-title" style="color: var(--primary); font-size: 1.6rem; margin: 0;">
+
+                                    <!-- Switch on the Type, not the string -->
+                                    @switch (item)
+                                    {
+                                        case EjustRecoveryHub.Models.IdItem idCard:
+                                            @($"ID : {idCard.IdNumber}")
+                                            break;
+                                        case EjustRecoveryHub.Models.DeviceItem device:
+                                            @($"{device.DeviceBrand} {device.DeviceModel}")
+                                            break;
+                                        case EjustRecoveryHub.Models.WalletItem wallet:
+                                            @($"{wallet.WalletColor} Wallet")
+                                            break;
+                                        case EjustRecoveryHub.Models.JewelryItem jewelry:
+                                            @($"{jewelry.JewelryMaterial} {jewelry.JewelryType}")
+                                            break;
+                                        case EjustRecoveryHub.Models.NotebookItem notebook:
+                                            @($"{notebook.NotebookColor} Notebook")
+                                            break;
+                                        default:
+                                            @:Unknown Item
+                                            break;
+                                    }
+                                </h3>
+                                <span class="card-badge" style="position: relative; top: 0; right: 0; background: var(--success);">Found</span>
+                            </div>
+
+                            <div class="card-description" style="margin-bottom: 1.5rem;">
+
+                                <p style="margin-bottom: 0.8rem; font-size: 1.05rem; color: var(--dark);">
+                                    <i class="fa-solid fa-info-circle" style="color: var(--accent); width: 25px;"></i>
+
+                                    <!-- POLYMORPHIC FIX: Map to the specific casted variables -->
+                                    @switch (item)
+                                    {
+                                        case EjustRecoveryHub.Models.IdItem idCard:
+                                            <strong>Name on ID: </strong>
+                                            @idCard.IdName
+                                            break;
+                                        case EjustRecoveryHub.Models.WalletItem wallet:
+                                            <strong>Description:</strong>
+                                            @wallet.WalletColor @wallet.WalletBrandOrMaterial
+                                            break;
+                                        case EjustRecoveryHub.Models.DeviceItem device:
+                                            <strong>Description:</strong>
+                                            @device.DeviceDescription
+                                            break;
+                                        case EjustRecoveryHub.Models.JewelryItem jewelry:
+                                            <strong>Description:</strong>
+                                            @jewelry.JewelryMaterial @jewelry.JewelryType
+                                            break;
+                                        case EjustRecoveryHub.Models.NotebookItem notebook:
+                                            <strong>Color:</strong>
+                                            @notebook.NotebookColor
+                                            break;
+                                        default:
+                                            @:Other
+                                            break;
+                                    }
+                                </p>
+                                <p style="margin-bottom: 0.8rem; font-size: 1.05rem; color: var(--dark);">
+                                    <i class="fa-solid fa-location-dot" style="color: var(--secondary); width: 25px;"></i>
+                                    <strong>Found at: </strong> @item.LocationFound
+                                </p>
+                            </div>
+
+                            <div class="card-actions">
+                                <a asp-controller="Items" asp-action="Details" asp-route-id="@item.Id" class="search-btn w-100" style="display: block; text-align: center; text-decoration: none;">
+                                    <i class="fa-solid fa-eye me-2"></i> View Details
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="empty-state text-center form-stacked" style="padding: 5rem 2rem; align-items: center;">
+                <i class="fa-solid fa-box-open mb-3" style="font-size: 5rem; color: var(--accent);"></i>
+
+                <h3 style="color: var(--primary); font-size: 2rem; font-weight: 700; margin-bottom: 1rem;">
+                    No Items Found
+                </h3>
+
+                <p style="color: #7f8c8d; font-size: 1.1rem; max-width: 400px; margin-bottom: 2rem;">
+                    We couldn't find any lost items matching those specific details in the campus database right now.
+                </p>
+
+                <a asp-controller="Items" asp-action="LostItems" class="btn-primary" style="display: inline-block; padding: 1rem 2.5rem;">
+                    <i class="fa-solid fa-magnifying-glass me-2"></i> Try Another Search
+                </a>
+            </div>
+        }
+    </main>
+</div>
