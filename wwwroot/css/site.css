@@ -1,31 +1,821 @@
-html {
-  font-size: 14px;
+/* ==========================================================================
+   1. GLOBAL VARIABLES & RESET
+   ========================================================================== */
+:root {
+    --primary: #23301f;
+    --secondary: #6f9169;
+    --accent: #c9a66b;
+    --light: #ecf0f1;
+    --dark: #2c3e50;
+    --success: #27ae60;
+    --lost: #b5563c;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  margin-bottom: 60px;
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    color: #333;
+    overflow: hidden;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* ==========================================================================
+   2. MAIN CONTAINERS & LAYOUT
+   ========================================================================== */
+.glass-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 0;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+.main-content {
+    margin-left: 280px;
+    padding: 2rem;
+    min-height: 100vh;
 }
+
+/* ==========================================================================
+   3. SIDEBAR NAVIGATION
+   ========================================================================== */
+.sidebar {
+    background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    height: 100vh;
+    position: fixed;
+    width: 280px;
+    padding: 2rem 1.5rem;
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+    .logo h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .logo p {
+        opacity: 0.8;
+        font-size: 0.9rem;
+    }
+
+.user-info {
+    background: rgba(255,255,255,0.1);
+    padding: 1rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    text-align: center;
+    border-left: 4px solid var(--accent);
+}
+
+.user-name {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+}
+
+    .nav-links li {
+        margin-bottom: 0.8rem;
+    }
+
+    .nav-links a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+    .nav-links i {
+        width: 20px;
+        text-align: center;
+    }
+
+    /* Makes the Logout <button> (inside a <form>) look identical to the <a> nav links above */
+    .nav-links .nav-link-button {
+        width: 100%;
+        background: none;
+        border: none;
+        font: inherit;
+        cursor: pointer;
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.3s ease;
+    }
+
+        .nav-links .nav-link-button:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+/* ==========================================================================
+   4. CONTENT HEADERS
+   ========================================================================== */
+.content-header {
+    background: white;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+    .content-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--secondary), var(--accent), var(--success));
+    }
+
+.welcome-section h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1rem;
+}
+
+.welcome-section p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   5. SEARCH BAR COMPONENTS
+   ========================================================================== */
+.search-wrapper {
+    margin-bottom: 2.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.custom-search-form {
+    width: 100%;
+    max-width: 600px;
+}
+
+.search-input-group {
+    display: flex;
+    align-items: center;
+    background: white;
+    border-radius: 30px;
+    padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+    .search-input-group:focus-within {
+        border-color: var(--secondary);
+        box-shadow: 0 10px 25px rgba(111, 145, 105, 0.2);
+    }
+
+.search-icon {
+    color: var(--accent);
+    font-size: 1.2rem;
+    margin-right: 15px;
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 1.05rem;
+    color: var(--dark);
+    background: transparent;
+}
+
+    .search-input::placeholder {
+        color: #a0aab5;
+    }
+
+/* ==========================================================================
+   6. DYNAMIC FORMS & DROPDOWNS
+   ========================================================================== */
+.form-stacked {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.mb-3 {
+    margin-bottom: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.me-2 {
+    margin-right: 0.5rem;
+}
+
+/* Custom Modern Dropdown Styling */
+select.search-input {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    font-weight: 500;
+    /* Modern Custom Arrow SVG, tinted to match the gold accent */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23c9a66b%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem top 50%;
+    background-size: 0.85rem auto;
+    padding-right: 2.5rem; /* Prevents text from overlapping the arrow */
+    transition: all 0.3s ease;
+}
+
+    /* Ensure the dropdown menu items look clean on desktop */
+    select.search-input option {
+        background-color: white;
+        color: var(--dark);
+        padding: 10px;
+        font-weight: normal;
+    }
+
+.dynamic-group {
+    display: none;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.form-divider {
+    border: none;
+    border-top: 2px dashed rgba(0,0,0,0.1);
+    margin: 1.5rem 0;
+}
+
+/* ==========================================================================
+   7. BUTTONS
+   ========================================================================== */
+.search-btn {
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .search-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(111, 145, 105, 0.35);
+    }
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), #303030);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(201, 166, 107, 0.35);
+        color: white;
+    }
+
+.btn-outline {
+    border: 2px solid var(--accent);
+    background: transparent;
+    color: var(--accent);
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+    .btn-outline:hover {
+        background: var(--accent);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+/* ==========================================================================
+   8. UI CARDS & GRIDS
+   ========================================================================== */
+.elements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.element-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    transition: all 0.4s ease;
+    position: relative;
+    border: 1px solid #f8f9fa;
+}
+
+    .element-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    .element-card.freeze-hover:hover {
+        transform: none !important;
+    }
+
+.card-header {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.activity-card:hover .card-image {
+    transform: scale(1.1);
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
+    display: flex;
+    align-items: flex-end;
+    padding: 1.5rem;
+}
+
+.card-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.card-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--secondary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+    /* Status modifiers: pair with .card-badge, e.g. class="card-badge badge-lost" */
+    .card-badge.badge-lost {
+        background: var(--lost);
+    }
+
+    .card-badge.badge-found {
+        background: linear-gradient(270deg, var(--primary) 0%, var(--secondary) 100%)
+    }
+
+.card-content {
+    padding: 1.5rem;
+}
+
+.card-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f1f2f6;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin-top: 0.2rem;
+}
+
+.card-description {
+    color: #5a6c7d;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.card-actions {
+    display: flex;
+    gap: 0.8rem;
+}
+
+/* ==========================================================================
+   9.CUSTOM DROPDOWN STYLING
+   ========================================================================== */
+.custom-dropdown-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.custom-dropdown-trigger {
+    cursor: pointer;
+    user-select: none;
+    justify-content: space-between;
+}
+
+.dropdown-selected-text {
+    flex: 1;
+    color: var(--dark);
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+.dropdown-arrow {
+    color: var(--accent);
+    transition: transform 0.3s ease;
+}
+
+/* Rotate arrow when open */
+.custom-dropdown-trigger.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    border: 1px solid rgba(0,0,0,0.05);
+    z-index: 1000;
+    /* Hidden by default with animation ready */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+    /* Show menu when active */
+    .custom-dropdown-menu.active {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+.custom-option {
+    padding: 12px 20px 12px 45px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--dark);
+    transition: all 0.2s ease;
+}
+
+    .custom-option:hover {
+        background: linear-gradient(90deg, rgba(111, 145, 105, 0.08) 0%, transparent 100%);
+        color: var(--secondary);
+        padding-left: 50px; /* Slight indent animation on hover */
+        border-left: 3px solid var(--secondary);
+    }
+
+/* ==========================================================================
+   10. RESPONSIVE DESIGN (MEDIA QUERIES)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 250px;
+    }
+
+    .main-content {
+        margin-left: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+
+    .activities-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .content-header {
+        padding: 1.5rem;
+    }
+
+    .welcome-section h2 {
+        font-size: 2rem;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1001;
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.8rem;
+        border-radius: 10px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-actions {
+        flex-direction: column;
+    }
+
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .content-header {
+        padding: 1rem;
+    }
+
+    .welcome-section h2 {
+        font-size: 1.8rem;
+    }
+}
+
+/* ==========================================================================
+   11. ANIMATIONS
+   ========================================================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.activity-card {
+    animation: slideIn 0.6s ease-out;
+}
+
+    .activity-card:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .activity-card:nth-child(3) {
+        animation-delay: 0.2s;
+    }
+
+    .activity-card:nth-child(4) {
+        animation-delay: 0.3s;
+    }
+
+    .activity-card:nth-child(5) {
+        animation-delay: 0.4s;
+    }
+
+    .activity-card:nth-child(6) {
+        animation-delay: 0.5s;
+    }
+
+    .activity-card:nth-child(7) {
+        animation-delay: 0.6s;
+    }
+
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-glass-modal {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   12. Upload Button
+   ========================================================================== */
+.upload-glass-btn {
+    display: block;
+    width: 100%;
+    padding: 1.2rem;
+    background: #ffffff;
+    border: 2px dashed #cccccc;
+    border-radius: 12px;
+    text-align: center;
+    color: var(--dark);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+    .upload-glass-btn:hover {
+        background: #d4af37;
+        border: 2px dashed var(--primary);
+        color: #ffffff;
+        transform: translateY(-2px);
+    }
+
+    .upload-glass-btn.file-selected {
+        background: var(--primary-gradient);
+        color: white;
+        border: 2px solid var(--primary);
+        box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+    }
+/* ==========================================================================
+   13. SweetAlert2 popups themed to match the site's brand palette
+   ========================================================================== */
+.swal2-container {
+    background: rgba(35, 48, 31, 0.55) !important; /* var(--primary), tinted */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.swal-glass-popup {
+    background: #ffffff !important;
+    border: none !important;
+    border-radius: 24px !important;
+    box-shadow: 0 25px 60px rgba(35, 48, 31, 0.35) !important;
+    padding: 1rem 0.5rem 0.5rem !important;
+}
+
+.swal-glass-title {
+    color: var(--primary) !important;
+    font-weight: 800 !important;
+    font-size: 1.7rem !important;
+    margin-top: 0.75rem !important;
+}
+
+.swal-glass-text {
+    color: #5a6c7d !important;
+    font-size: 1.05rem !important;
+}
+
+/* Reskin the built-in icons to use the site's actual colors instead of SweetAlert2's defaults */
+.swal-glass-popup .swal2-icon.swal2-success {
+    border-color: var(--success) !important;
+}
+
+    .swal-glass-popup .swal2-icon.swal2-success [class^='swal2-success-line'] {
+        background-color: var(--success) !important;
+    }
+
+    .swal-glass-popup .swal2-icon.swal2-success .swal2-success-ring {
+        border-color: rgba(39, 174, 96, 0.25) !important;
+    }
+
+.swal-glass-popup .swal2-icon.swal2-question {
+    border-color: var(--secondary) !important;
+    color: var(--secondary) !important;
+}
+
+.swal-glass-confirm,
+.swal-glass-cancel {
+    border: none !important;
+    outline: none !important;
+    border-radius: 25px !important;
+    padding: 0.75rem 2.2rem !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    margin: 0.3rem !important;
+    transition: all 0.3s ease;
+}
+
+    .swal-glass-confirm:focus,
+    .swal-glass-cancel:focus {
+        outline: none !important;
+    }
+
+.swal-glass-confirm {
+    background: linear-gradient(135deg, var(--secondary), var(--primary)) !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 20px rgba(35, 48, 31, 0.25) !important;
+}
+
+    .swal-glass-confirm:hover,
+    .swal-glass-confirm:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 0 0 3px rgba(111, 145, 105, 0.4), 0 10px 24px rgba(35, 48, 31, 0.35) !important;
+    }
+
+.swal-glass-cancel {
+    background: rgba(181, 86, 60, 0.08) !important;
+    color: var(--lost) !important;
+}
+
+    .swal-glass-cancel:hover,
+    .swal-glass-cancel:focus {
+        background: rgba(181, 86, 60, 0.18) !important;
+        box-shadow: 0 0 0 3px rgba(181, 86, 60, 0.25) !important;
+    }
