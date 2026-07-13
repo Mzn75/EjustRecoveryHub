@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using recoverytest3.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using EjustRecoveryHub.Models;
 
-namespace recoverytest3.Data
+namespace EjustRecoveryHub.Data
 {
     public class ApplicationDbContext : DbContext
     {
