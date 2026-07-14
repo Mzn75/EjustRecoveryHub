@@ -29,6 +29,6 @@ This project represents the complete architectural migration of that concept int
 
 ## 📸 Screenshots
 
-![Dashboard](./docs/screenshots/screenshot1.png)
-![Found Items UI](./docs/screenshots/screenshot2.png)
-![Lost Items UI](./docs/screenshots/screenshot3.png)
+![Dashboard](./docs/screenshots/Screenshot1.png)
+![Found Items UI](./docs/screenshots/Screenshot2.png)
+![Lost Items UI](./docs/screenshots/Screenshot3.png)
