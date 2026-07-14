@@ -1,6 +1,5 @@
 ﻿@model EjustRecoveryHub.Models.ItemViewModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Report Found Items";
 
     // 1. Read the messages
@@ -13,7 +12,6 @@
     TempData.Remove("SuccessMessage");
     TempData.Remove("DuplicateMessage");
 }
-
 
 <!-- Mobile Menu Button -->
 <button class="mobile-menu-btn d-lg-none">
@@ -33,31 +31,35 @@
                 <!-- Generating Hidden Security Token -->
                 @Html.AntiForgeryToken()
 
-                <!-- Item Category -->
+                <!-- Accessible Custom Dropdown -->
                 <div class="custom-dropdown-wrapper mb-4">
 
-                    <div class="search-input-group custom-dropdown-trigger" id="customDropdownTrigger">
-                        <i class="fa-solid fa-layer-group search-icon"></i>
-                        <span class="dropdown-selected-text">  Choose Item Type </span>
-                        <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
-                    </div>
-
-                    <div class="custom-dropdown-menu" id="customDropdownMenu">
-                        <div class="custom-option" data-value="id">ID Card</div>
-                        <div class="custom-option" data-value="wallet">Wallet</div>
-                        <div class="custom-option" data-value="device">Electronic Device</div>
-                        <div class="custom-option" data-value="jewelry">Jewelry</div>
-                        <div class="custom-option" data-value="notebook">Notebook</div>
-                    </div>
-
+                    <!-- Hidden native select for the actual form submission -->
                     <select id="itemCategory" name="Category" required style="display: none;">
-                        <option value="" disabled selected>  Choose Item Type  </option>
+                        <option value="" disabled selected>Choose Item Type</option>
                         <option value="id">ID Card</option>
                         <option value="wallet">Wallet</option>
                         <option value="device">Electronic Device</option>
                         <option value="jewelry">Jewelry</option>
                         <option value="notebook">Notebook</option>
                     </select>
+
+                    <!-- The Custom Trigger (Focusable) -->
+                    <div class="search-input-group custom-dropdown-trigger" id="customDropdownTrigger"
+                         tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="customDropdownMenu">
+                        <i class="fa-solid fa-layer-group search-icon"></i>
+                        <span class="dropdown-selected-text"> Choose Item Type </span>
+                        <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                    </div>
+
+                    <!-- The Custom Menu -->
+                    <div class="custom-dropdown-menu" id="customDropdownMenu" role="listbox">
+                        <div class="custom-option" role="option" tabindex="-1" data-value="id">ID Card</div>
+                        <div class="custom-option" role="option" tabindex="-1" data-value="wallet">Wallet</div>
+                        <div class="custom-option" role="option" tabindex="-1" data-value="device">Electronic Device</div>
+                        <div class="custom-option" role="option" tabindex="-1" data-value="jewelry">Jewelry</div>
+                        <div class="custom-option" role="option" tabindex="-1" data-value="notebook">Notebook</div>
+                    </div>
                 </div>
 
                 <!-- Dynamic Fields Container -->
@@ -128,7 +130,7 @@
                     <div class="custom-file-upload mb-4">
                         <input type="file" id="ItemPhoto" name="ItemPhoto" class="d-none" accept="image/*" onchange="previewImage(this)" />
                         <label for="ItemPhoto" class="upload-glass-btn" id="uploadLabel">
-                            <img id="imagePreview" src="" alt="Item Preview" style="display: none; width: 100%; max-height: 250px; object-fit: cover; border-radius: 8px;" />
+                            <img id="imagePreview" src="" alt="Item Preview" class="image-preview-thumbnail" style="display: none;" />
                             <div id="uploadTextContainer">
                                 <i class="fa-solid fa-camera me-2"></i>
                                 <span>Upload Item Photo (Optional)</span>
@@ -164,39 +166,22 @@
         <div class="form-divider"></div>
 
         <!-- 4. The Global Live Feed -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="mb-5 mt-5" style="color: var(--primary); font-weight: 700;">Items You Recently Found</h3>
-
-            <form method="get" asp-action="FoundItems" asp-controller="Items" class="m-0">
-                <select name="filter" onchange="this.form.submit()" class="shadow-sm"
-                        style="appearance: none; -webkit-appearance: none; background-color: white; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; color: #555; padding: 0.4rem 2rem 0.4rem 1rem; font-size: 0.85rem; font-weight: 500; cursor: pointer; outline: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 0.7rem top 50%; background-size: 0.6rem auto;">
-
-                    @if (ViewBag.CurrentFilter == "active")
-                    {
-                        <option value="recent">Recently Reported</option>
-                        <option value="active" selected>Status: Active First</option>
-                    }
-                    else
-                    {
-                        <option value="recent" selected>Recently Reported</option>
-                        <option value="active">Status: Active First</option>
-                    }
-                </select>
-            </form>
+        <div class="mb-4">
+            <h3 class="mb-4 mt-5 feed-title">Items You Recently Found</h3>
         </div>
 
         @if (ViewBag.RecentItems != null && ViewBag.RecentItems.Count > 0)
         {
-            <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+            <div class="feed-list">
                 @foreach (var item in ViewBag.RecentItems)
                 {
-                    <div class="element-card freeze-hover" style="display: flex; flex-direction: row; align-items: center; padding: 1rem; min-height: 100px;">
-               
+                    <div class="element-card freeze-hover feed-card-horizontal">
+
                         <!-- Left Side: Image -->
-                        <div style="width: 80px; height: 80px; flex-shrink: 0; border-radius: 12px; overflow: hidden; margin-right: 1.5rem;">
+                        <div class="item-thumbnail">
                             @if (!string.IsNullOrEmpty(item.PhotoPath))
                             {
-                                <img src="@item.PhotoPath" alt="Item" style="width: 100%; height: 100%; object-fit: cover;" />
+                                <img src="@item.PhotoPath" alt="Item" class="item-thumbnail-img" />
                             }
                             else
                             {
@@ -208,7 +193,7 @@
                                         iconClass = "fa-id-card";
                                         break;
                                     case EjustRecoveryHub.Models.WalletItem:
-                                        iconClass = "fa-wallet"; // Using standard wallet icon
+                                        iconClass = "fa-wallet";
                                         break;
                                     case EjustRecoveryHub.Models.DeviceItem:
                                         iconClass = "fa-mobile-screen";
@@ -221,16 +206,16 @@
                                         break;
                                 }
 
-                                // 2. Render the specific icon with a nice soft background
-                                <div class="d-flex align-items-center justify-content-center" style="width: 100%; height: 100%; background: #f8f9fa; border: 1px solid #e9ecef;">
+                                <!-- 2. Render the specific icon -->
+                                <div class="d-flex align-items-center justify-content-center item-thumbnail-fallback">
                                     <i class="fa-solid @iconClass fa-2x" style="color: var(--secondary);"></i>
                                 </div>
                             }
                         </div>
 
                         <!-- Right Side: Details -->
-                        <div style="flex-grow: 1;">
-                            <h4 class="mb-1" style="color: var(--primary); font-size: 1.2rem; font-weight: 700;">
+                        <div class="item-details">
+                            <h4 class="mb-1 item-title">
                                 <!-- POLYMORPHIC FIX: Switching on the Object Type -->
                                 @switch (item)
                                 {
@@ -254,7 +239,7 @@
                                         break;
                                 }
                             </h4>
-                            <div style="color: #5a6c7d; font-size: 0.95rem;">
+                            <div class="item-description">
                                 <!-- POLYMORPHIC FIX: Using the mapped typed variables (idCard, wallet, etc.) -->
                                 @switch (item)
                                 {
@@ -291,32 +276,19 @@
                             </div>
                         </div>
 
-                        <!-- Far Right: Status Badge & Dropdown -->
-                        <div style="padding-left: 1rem; display: flex; align-items: center; gap: 0.75rem;">
-
+                        <!-- Far Right: Status Dropdown -->
+                        <div class="item-actions">
                             @if (ViewBag.MyReportedIds != null && ((List<int>)ViewBag.MyReportedIds).Contains(item.Id))
                             {
-                                string displayText = item.Status == "Returned" ? "Returned" : "Active";
                                 string statusColor = item.Status == "Returned" ? "var(--secondary)" : "var(--accent)";
 
-                                <form method="post" asp-action="UpdateStatus" asp-controller="Items" id="statusForm-@item.Id" style="margin: 0; position: relative;">
-
+                                <form method="post" asp-action="UpdateStatus" asp-controller="Items" id="statusForm-@item.Id" class="status-form">
                                     <!-- Generating Hidden Security Token -->
                                     @Html.AntiForgeryToken()
-
                                     <input type="hidden" name="id" value="@item.Id" />
 
-                                    <div id="trigger-@item.Id" class="customDropdownTrigger" onclick="toggleStatusMenu(event, @item.Id)" style="border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); padding: 0.5rem 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: white; min-width: 170px;">
-                                        <span style="color: @statusColor; font-size: 0.9rem; font-weight: 600;">@displayText</span>
-                                        <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; color: @statusColor;"></i>
-                                    </div>
-
-                                    <div class="custom-dropdown-menu" id="statusMenu-@item.Id">
-                                        <div class="custom-option" onclick="submitNewStatus(@item.Id, 'Active')">Active</div>
-                                        <div class="custom-option" onclick="submitNewStatus(@item.Id, 'Returned')">Returned</div>
-                                    </div>
-
-                                    <select id="hiddenSelect-@item.Id" name="newStatus" required style="display: none;">
+                                    <!-- Native Auto-Submitting Select -->
+                                    <select name="newStatus" class="status-trigger" style="color: @statusColor; appearance: auto; cursor: pointer; padding-right: 1.5rem; font-weight: 600;" onchange="this.form.submit()">
                                         @if (item.Status == "Returned")
                                         {
                                             <option value="Active">Active</option>
@@ -329,11 +301,9 @@
                                         }
                                     </select>
                                 </form>
-
-                                <script> document.getElementById('statusForm-@item.Id').closest('.element-card').style.overflow = 'visible'; </script>
                             }
 
-                            <span class="card-badge badge-found" style="position: static; display: inline-block; white-space: nowrap;">
+                            <span class="card-badge badge-found badge-static">
                                 Reported: @item.DateReported.ToString("MMM dd, yyyy")
                             </span>
                         </div>
@@ -343,9 +313,9 @@
         }
         else
         {
-            <div class="content-header text-center py-5" style="background: rgba(255,255,255,0.6); box-shadow: none; border: 2px dashed rgba(0,0,0,0.1);">
-                <i class="fa-solid fa-magnifying-glass fa-3x mb-3" style="color: var(--secondary);"></i>
-                <p class="mb-0" style="color: var(--dark); font-weight: 500;">No items have been reported recently.</p>
+            <div class="content-header text-center py-5 empty-state-card">
+                <i class="fa-solid fa-magnifying-glass fa-3x mb-3 empty-state-icon"></i>
+                <p class="mb-0 empty-state-text">No items have been reported recently.</p>
             </div>
         }
     </main>
@@ -353,102 +323,78 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-    if (typeof Swal === 'undefined') {
-    console.error('SweetAlert2 not loaded');
-    return;
-    }
+        if (typeof Swal === 'undefined') {
+            console.error('SweetAlert2 not loaded');
+            return;
+        }
 
-    @if (!string.IsNullOrEmpty(duplicateMessage))
-    {
-        <text>
-            Swal.fire({
-            title: 'Duplicated Report',
-            text: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(duplicateMessage)),
-            icon: 'warning',
-            showCancelButton: true,
-            showConfirmButton: false,
-            cancelButtonText: 'Go Back',
-            buttonsStyling: false,
-            customClass: {
-            popup: 'swal-glass-popup',
-            title: 'swal-glass-title',
-            htmlContainer: 'swal-glass-text',
-            confirmButton: 'swal-glass-confirm',
-            cancelButton: 'swal-glass-cancel'
-            }
+        @if (!string.IsNullOrEmpty(duplicateMessage))
+        {
+                <text>
+                        Swal.fire({
+                            title: 'Duplicated Report',
+                            text: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(duplicateMessage)),
+                            icon: 'warning',
+                            showCancelButton: true,
+                            showConfirmButton: false,
+                            cancelButtonText: 'Go Back',
+                            buttonsStyling: false,
+                            customClass: {
+                                popup: 'swal-glass-popup',
+                                title: 'swal-glass-title',
+                                htmlContainer: 'swal-glass-text',
+                                confirmButton: 'swal-glass-confirm',
+                                cancelButton: 'swal-glass-cancel'
+                            }
+                        });
+                </text>
+        }
+
+        var form = document.getElementById('reportItemForm');
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Report this item?',
+                    text: "Are you sure all the details and photos are correct?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, submit it!',
+                    cancelButtonText: 'Go back',
+                    buttonsStyling: false,
+                    reverseButtons: true,
+                    customClass: {
+                        popup: 'swal-glass-popup',
+                        title: 'swal-glass-title',
+                        htmlContainer: 'swal-glass-text',
+                        confirmButton: 'swal-glass-confirm',
+                        cancelButton: 'swal-glass-cancel'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) form.submit();
+                });
             });
-        </text>
-    }
+        } else {
+            console.warn('reportItemForm not found');
+        }
 
-    var form = document.getElementById('reportItemForm');
-    if (form) {
-    form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    Swal.fire({
-    title: 'Report this item?',
-    text: "Are you sure all the details and photos are correct?",
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, submit it!',
-    cancelButtonText: 'Go back',
-    buttonsStyling: false,
-    reverseButtons: true,
-    customClass: {
-    popup: 'swal-glass-popup',
-    title: 'swal-glass-title',
-    htmlContainer: 'swal-glass-text',
-    confirmButton: 'swal-glass-confirm',
-    cancelButton: 'swal-glass-cancel'
-    }
-    }).then((result) => {
-    if (result.isConfirmed) form.submit();
-    });
-    });
-    } else {
-    console.warn('reportItemForm not found');
-    }
-
-    @if (!string.IsNullOrEmpty(successMessage))
-    {
-        <text>
-            Swal.fire({
-            title: 'Success!',
-            text: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(successMessage)),
-            icon: 'success',
-            confirmButtonText: 'Great!',
-            buttonsStyling: false,
-            customClass: {
-            popup: 'swal-glass-popup',
-            title: 'swal-glass-title',
-            htmlContainer: 'swal-glass-text',
-            confirmButton: 'swal-glass-confirm'
-            }
-            });
-        </text>
-    }
-    });
-</script>
-<script>
-    function toggleStatusMenu(e, id) {
-    e.stopPropagation();
-
-    var menu = document.getElementById('statusMenu-' + id);
-    var trigger = document.getElementById('trigger-' + id);
-
-    document.querySelectorAll('.custom-dropdown-menu[id^="statusMenu-"]').forEach(m => m.classList.remove('active'));
-    document.querySelectorAll('div[id^="trigger-"]').forEach(t => t.classList.remove('open'));
-
-    menu.classList.toggle('active');
-    trigger.classList.toggle('open');
-    }
-
-    function submitNewStatus(id, statusValue) {
-    document.getElementById('hiddenSelect-' + id).value = statusValue;
-    document.getElementById('statusForm-' + id).submit();
-    }
-
-    document.addEventListener('click', function (e) {
-    document.querySelectorAll('.custom-dropdown-menu[id^="statusMenu-"]').forEach(m => m.classList.remove('active'));
-    document.querySelectorAll('div[id^="trigger-"]').forEach(t => t.classList.remove('open'));
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+                <text>
+                        Swal.fire({
+                            title: 'Success!',
+                            text: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(successMessage)),
+                            icon: 'success',
+                            confirmButtonText: 'Great!',
+                            buttonsStyling: false,
+                            customClass: {
+                                popup: 'swal-glass-popup',
+                                title: 'swal-glass-title',
+                                htmlContainer: 'swal-glass-text',
+                                confirmButton: 'swal-glass-confirm'
+                            }
+                        });
+                </text>
+        }
     });
 </script>
