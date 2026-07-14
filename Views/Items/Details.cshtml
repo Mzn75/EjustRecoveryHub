@@ -8,36 +8,35 @@
     <title>Item Details</title>
 </head>
 
+<div class="glass-container details-wrapper d-flex align-items-center justify-content-center">
+    <main class="main-content details-main">
 
-<div class="glass-container" style="padding: 2rem 1rem; min-height: 85vh; display: flex; align-items: center; justify-content: center;">
-    <main class="main-content" style="max-width: 800px; width: 100%;">
-
-        <a asp-controller="Items" asp-action="LostItems" style="color: var(--primary); text-decoration: none; font-weight: 600; display: inline-block; margin-bottom: 1.5rem;">
+        <a asp-controller="Items" asp-action="LostItems" class="back-link mb-4">
             <i class="fa-solid fa-arrow-left me-2"></i> Back to Search
         </a>
 
-        <div class="custom-search-form form-stacked" style="padding: 0; overflow: hidden; align-content:center;">
+        <div class="custom-search-form form-stacked details-card-custom">
 
-            <div style="background: rgba(0,0,0,0.03); width: 100%; height: 300px; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255,255,255,0.5);">
+            <div class="details-image-wrapper d-flex align-items-center justify-content-center">
                 @if (!string.IsNullOrEmpty(Model.PhotoPath))
                 {
-                    <img src="@Model.PhotoPath" alt="Item Photo" style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+                    <img src="@Model.PhotoPath" alt="Item Photo" class="details-image" />
                 }
                 else
                 {
-                    <div style="text-align: center; color: #a0aab5;">
-                        <i class="fa-solid fa-image" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                    <div class="details-no-image text-center">
+                        <i class="fa-solid fa-image details-no-image-icon mb-3"></i>
                         <p>No Photo Provided</p>
                     </div>
                 }
             </div>
 
-            <div style="padding: 2.5rem;">
+            <div class="details-body">
 
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2rem;">
+                <div class="d-flex justify-content-between align-items-start mb-4">
                     <div>
-                        <span class="card-badge" style="background: var(--primary); color: white; margin-bottom: 0.5rem; display: inline-block;">Found Item #@Model.Id</span>
-                        <h2 style="color: var(--dark); margin: 0; font-size: 2.5rem; text-transform: capitalize;">
+                        <span class="card-badge badge-solid-primary mb-2 d-inline-block">Found Item #@Model.Id</span>
+                        <h2 class="details-title m-0">
 
                             <!-- Switch on Type to access specific properties -->
                             @switch (Model)
@@ -65,32 +64,32 @@
                     </div>
                 </div>
 
-                <div class="dynamic-group" style="display: block; margin-bottom: 2rem;">
+                <div class="dynamic-group d-block mb-4">
 
-                    <div class="search-input-group mb-3" style="background: rgba(255,255,255,0.6);">
-                        <i class="fa-solid fa-location-dot search-icon" style="color: var(--secondary);"></i>
-                        <div style="padding: 0.8rem 1rem;">
-                            <small style="color: #7f8c8d; display: block; font-size: 0.85rem;">Found At</small>
-                            <strong style="color: var(--dark);">@Model.LocationFound</strong>
+                    <div class="search-input-group info-group-glass mb-3">
+                        <i class="fa-solid fa-location-dot search-icon icon-secondary"></i>
+                        <div class="info-content">
+                            <small class="info-label d-block">Found At</small>
+                            <strong class="info-value">@Model.LocationFound</strong>
                         </div>
                     </div>
 
-                    <div class="search-input-group mb-3" style="background: rgba(255,255,255,0.6);">
-                        <i class="fa-solid fa-building-shield search-icon" style="color: var(--primary);"></i>
-                        <div style="padding: 0.8rem 1rem;">
-                            <small style="color: #7f8c8d; display: block; font-size: 0.85rem;">Currently Located At</small>
-                            <strong style="color: var(--dark);">@Model.ItemLocation</strong>
+                    <div class="search-input-group info-group-glass mb-3">
+                        <i class="fa-solid fa-building-shield search-icon icon-primary"></i>
+                        <div class="info-content">
+                            <small class="info-label d-block">Currently Located At</small>
+                            <strong class="info-value">@Model.ItemLocation</strong>
                         </div>
                     </div>
 
                 </div>
 
-                <div style="background: rgba(37, 211, 102, 0.1); border: 1px solid rgba(37, 211, 102, 0.3); border-radius: 12px; padding: 1.5rem; text-align: center;">
-                    <h4 style="color: var(--dark); margin-bottom: 0.5rem;">Is this yours?</h4>
-                    <p style="color: #7f8c8d; margin-bottom: 1.5rem;">Contact the finder directly to arrange a safe return.</p>
+                <div class="contact-action-box p-4 text-center">
+                    <h4 class="contact-action-title mb-2">Is this yours?</h4>
+                    <p class="contact-action-desc mb-4">Contact the finder directly to arrange a safe return.</p>
 
                     <!-- The trigger button -->
-                    <button type="button" id="revealContactBtn" class="btn-primary w-100 mt-4" style="display: block; cursor: pointer; font-size: 1.1rem; padding: 0.9rem;">
+                    <button type="button" id="revealContactBtn" class="btn-primary w-100 mt-4 d-block btn-reveal">
                         <i class="fa-solid fa-eye me-2"></i> Reveal Contact Info
                     </button>
 
@@ -132,10 +131,10 @@
                                                                         Please be respectful when contacting the finder.
                                                                     </p>
                                                                     <div class="d-flex flex-column gap-3">
-                                                                        <a href="tel:${phone}" class="search-btn w-100 text-white" style="background: var(--dark); text-decoration: none; padding: 0.8rem;">
+                                                                        <a href="tel:${phone}" class="search-btn w-100 text-white btn-contact-call d-block">
                                                                             <i class="fa-solid fa-phone me-2"></i> Call ${phone}
                                                                         </a>
-                                                                        <a href="https://wa.me/${waNumber}" target="_blank" class="search-btn w-100 text-white" style="background: #25D366; text-decoration: none; padding: 0.8rem;">
+                                                                        <a href="https://wa.me/${waNumber}" target="_blank" class="search-btn w-100 text-white btn-contact-wa d-block">
                                                                             <i class="fa-brands fa-whatsapp me-2"></i> WhatsApp
                                                                         </a>
                                                                     </div>
