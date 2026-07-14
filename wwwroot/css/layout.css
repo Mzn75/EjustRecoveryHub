@@ -1,0 +1,119 @@
+﻿/* ==========================================================================
+   MAIN CONTAINERS & LAYOUT
+   ========================================================================== */
+.glass-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 0;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.main-content {
+    margin-left: 280px;
+    padding: 2rem;
+    min-height: 100vh;
+}
+
+/* ==========================================================================
+   SIDEBAR NAVIGATION
+   ========================================================================== */
+.sidebar {
+    background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+    color: white;
+    height: 100vh;
+    position: fixed;
+    width: 280px;
+    padding: 2rem 1.5rem;
+    box-shadow: 5px 0 25px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+    .logo h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .logo p {
+        opacity: 0.8;
+        font-size: 0.9rem;
+    }
+
+.user-info {
+    background: rgba(255,255,255,0.1);
+    padding: 1rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    text-align: center;
+    border-left: 4px solid var(--accent);
+}
+
+.user-name {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+}
+
+    .nav-links li {
+        margin-bottom: 0.8rem;
+    }
+
+    .nav-links a {
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+    .nav-links i {
+        width: 20px;
+        text-align: center;
+    }
+
+    .nav-links .nav-link-button {
+        width: 100%;
+        background: none;
+        border: none;
+        font: inherit;
+        cursor: pointer;
+        color: rgba(255,255,255,0.8);
+        text-decoration: none;
+        padding: 0.8rem 1rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.3s ease;
+    }
+
+        .nav-links .nav-link-button:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateX(5px);
+        }

@@ -1,0 +1,178 @@
+﻿/* ==========================================================================
+   ITEM DETAILS PAGE
+   ========================================================================== */
+.details-wrapper {
+    padding: 2rem 1rem;
+    min-height: 85vh;
+}
+
+.details-main {
+    max-width: 800px;
+    width: 100%;
+}
+
+.back-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    transition: opacity 0.3s ease;
+}
+
+    .back-link:hover {
+        opacity: 0.8;
+        color: var(--primary);
+    }
+
+.details-card-custom {
+    padding: 0;
+    overflow: hidden;
+    align-content: center;
+}
+
+.details-image-wrapper {
+    background: rgba(0, 0, 0, 0.03);
+    width: 100%;
+    height: 300px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.details-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.details-no-image {
+    color: #a0aab5;
+}
+
+.details-no-image-icon {
+    font-size: 4rem;
+}
+
+.details-body {
+    padding: 2.5rem;
+}
+
+.badge-solid-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.details-title {
+    color: var(--dark);
+    font-size: 2.5rem;
+    text-transform: capitalize;
+}
+
+.info-group-glass {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.icon-secondary {
+    color: var(--secondary);
+}
+
+.icon-primary {
+    color: var(--primary);
+}
+
+.info-content {
+    padding: 0.8rem 1rem;
+}
+
+.info-label {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+}
+
+.info-value {
+    color: var(--dark);
+}
+
+.contact-action-box {
+    background: rgba(37, 211, 102, 0.1);
+    border: 1px solid rgba(37, 211, 102, 0.3);
+    border-radius: 12px;
+}
+
+.contact-action-title {
+    color: var(--dark);
+}
+
+.contact-action-desc {
+    color: #7f8c8d;
+}
+
+.btn-reveal {
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0.9rem;
+}
+
+.btn-contact-call {
+    background: var(--dark);
+    text-decoration: none;
+    padding: 0.8rem;
+}
+
+.btn-contact-wa {
+    background: #25D366;
+    text-decoration: none;
+    padding: 0.8rem;
+}
+
+/* ==========================================================================
+   SEARCH RESULTS PAGE
+   ========================================================================== */
+.result-card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.result-card-title {
+    color: var(--primary);
+    font-size: 1.6rem;
+}
+
+.badge-solid-success {
+    background: var(--success);
+    color: white;
+}
+
+.result-detail-text {
+    font-size: 1.05rem;
+    color: var(--dark);
+}
+
+.result-icon {
+    width: 25px;
+    text-align: center;
+    display: inline-block;
+}
+
+.icon-accent {
+    color: var(--accent);
+}
+
+.empty-state-large {
+    padding: 5rem 2rem;
+}
+
+.empty-state-icon-large {
+    font-size: 5rem;
+    color: var(--accent);
+}
+
+.empty-state-title {
+    color: var(--primary);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.empty-state-desc {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    max-width: 400px;
+    margin: 0 auto;
+}
