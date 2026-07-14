@@ -601,6 +601,22 @@ select.search-input {
         border-radius: 10px;
         font-size: 1.2rem;
     }
+
+    .item-actions {
+        display: flex;
+        flex-direction: column; /* Stacks the items vertically */
+        align-items: flex-start; /* Aligns them to the left side */
+        gap: 0.8rem; /* Adds breathing room between the badge and dropdown */
+    }
+
+        .item-actions .card-badge {
+            order: 1; /* Forces the date badge to appear FIRST (on top) */
+            margin-bottom: 0; /* Clears any existing bottom margin */
+        }
+
+        .item-actions .status-form {
+            order: 2; /* Forces the dropdown to appear SECOND (underneath) */
+        }
 }
 
 @media (max-width: 480px) {
@@ -905,6 +921,12 @@ select.search-input {
     align-items: center;
     gap: 0.75rem;
 }
+    .item-actions .card-badge {
+        white-space: normal;
+        text-align: center;
+        line-height: 1.2;
+        max-width: 80px;
+    }
 
 .status-form {
     margin: 0;
@@ -959,6 +981,48 @@ select.search-input {
     object-fit: cover;
     border-radius: 8px;
 }
+
+/* Radio Buttons */
+.custom-radio .form-check-input:checked {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+.custom-radio .form-check-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.15);
+}
+
+.native-status-select {
+    width: 100%; /* Fills the max-width of 120px from the form */
+    padding: 0.3rem 1.5rem 0.3rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    /* Glass styling */
+    background-color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    /* Forces the browser to allow custom styling and sizes */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* Custom Dropdown Arrow */
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem top 50%;
+    background-size: 0.65rem auto;
+    /* Stops long text from breaking the layout */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+    .native-status-select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+    }
 
 /* ==========================================================================
    ITEM DETAILS COMPONENTS
@@ -1084,4 +1148,58 @@ select.search-input {
     background: #25D366;
     text-decoration: none;
     padding: 0.8rem;
+}
+
+/* ==========================================================================
+   SEARCH RESULTS COMPONENTS
+   ========================================================================== */
+.result-card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.result-card-title {
+    color: var(--primary);
+    font-size: 1.6rem;
+}
+
+.badge-solid-success {
+    background: var(--success);
+    color: white;
+}
+
+.result-detail-text {
+    font-size: 1.05rem;
+    color: var(--dark);
+}
+
+.result-icon {
+    width: 25px;
+    text-align: center;
+    display: inline-block;
+}
+
+.icon-accent {
+    color: var(--accent);
+}
+
+.empty-state-large {
+    padding: 5rem 2rem;
+}
+
+.empty-state-icon-large {
+    font-size: 5rem;
+    color: var(--accent);
+}
+
+.empty-state-title {
+    color: var(--primary);
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.empty-state-desc {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    max-width: 400px;
+    margin: 0 auto;
 }

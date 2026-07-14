@@ -89,6 +89,7 @@ namespace EjustRecoveryHub.Controllers
                         {
                             Category = "id",
                             ContactNumber = form.ContactNumber,
+                            ContactEmail = form.ContactEmail,
                             LocationFound = form.LocationFound,
                             ItemLocation = form.ItemLocation,
                             IdName = form.IdName,
@@ -105,6 +106,7 @@ namespace EjustRecoveryHub.Controllers
                         {
                             Category = "device",
                             ContactNumber = form.ContactNumber,
+                            ContactEmail = form.ContactEmail,
                             LocationFound = form.LocationFound,
                             ItemLocation = form.ItemLocation,
                             DeviceBrand = form.DeviceBrand,
@@ -122,6 +124,7 @@ namespace EjustRecoveryHub.Controllers
                         {
                             Category = "wallet",
                             ContactNumber = form.ContactNumber,
+                            ContactEmail = form.ContactEmail,
                             LocationFound = form.LocationFound,
                             ItemLocation = form.ItemLocation,
                             WalletColor = form.WalletColor,
@@ -138,6 +141,7 @@ namespace EjustRecoveryHub.Controllers
                         {
                             Category = "jewelry",
                             ContactNumber = form.ContactNumber,
+                            ContactEmail = form.ContactEmail,
                             LocationFound = form.LocationFound,
                             ItemLocation = form.ItemLocation,
                             JewelryType = form.JewelryType,
@@ -154,6 +158,7 @@ namespace EjustRecoveryHub.Controllers
                         {
                             Category = "notebook",
                             ContactNumber = form.ContactNumber,
+                            ContactEmail = form.ContactEmail,
                             LocationFound = form.LocationFound,
                             ItemLocation = form.ItemLocation,
                             NotebookColor = form.NotebookColor
@@ -278,7 +283,7 @@ namespace EjustRecoveryHub.Controllers
 
             var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
 
-            if (item == null || string.IsNullOrEmpty(item.ContactNumber))
+            if (item == null || string.IsNullOrEmpty(item.ContactNumber) && string.IsNullOrEmpty(item.ContactEmail))
             {
                 return Json(new { success = false, message = "Contact info not available." });
             }
@@ -289,7 +294,7 @@ namespace EjustRecoveryHub.Controllers
                 Expires = DateTimeOffset.Now.AddHours(24)
             });
 
-            return Json(new { success = true, phone = item.ContactNumber });
+            return Json(new { success = true, phone = item.ContactNumber, email = item.ContactEmail });
         }
 
         [HttpGet]

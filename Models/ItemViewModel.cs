@@ -14,6 +14,7 @@ namespace EjustRecoveryHub.Models
 
         // --- Optional Form Inputs ---
         public string? ContactNumber { get; set; }
+        public string? ContactEmail { get; set; }
         public string? ItemLocation { get; set; }
         public IFormFile? ItemPhoto { get; set; }
         public string? PhotoPath { get; set; }

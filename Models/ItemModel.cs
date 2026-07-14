@@ -15,6 +15,7 @@ namespace EjustRecoveryHub.Models
         public DateTime DateReported { get; set; }
         //public string? Category { get; set; }
         public string? ContactNumber { get; set; }
+        public string? ContactEmail { get; set; }
 
         [Required(ErrorMessage = "You must specify where the item was found.")]
         public string? LocationFound { get; set; }

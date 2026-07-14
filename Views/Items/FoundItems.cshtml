@@ -163,9 +163,39 @@
                     </div>
 
                     <!-- Contact Information -->
-                    <div class="search-input-group mb-4">
-                        <i class="fa-solid fa-phone search-icon"></i>
-                        <input type="tel" name="ContactNumber" class="search-input" placeholder="Your Phone Number" inputmode="numeric" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required />
+                    <hr class="form-divider" />
+                    <div class="mb-4">
+                        <label class="info-label mb-3 d-block" style="color: var(--dark); font-weight: 600;">
+                            How should the owner contact you?
+                        </label>
+
+                        <!-- The Toggle Switches -->
+                        <div class="d-flex gap-4 mb-3 px-2">
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="contactChoice" id="choicePhone" value="phone" checked style="cursor: pointer;">
+                                <label class="form-check-label" for="choicePhone" style="cursor: pointer; color: var(--dark);">
+                                    Phone Number
+                                </label>
+                            </div>
+                            <div class="form-check custom-radio">
+                                <input class="form-check-input" type="radio" name="contactChoice" id="choiceEmail" value="email" style="cursor: pointer;">
+                                <label class="form-check-label" for="choiceEmail" style="cursor: pointer; color: var(--dark);">
+                                    Email Address
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Phone Input (Visible by default) -->
+                        <div id="phoneInputContainer" class="search-input-group mb-4">
+                            <i class="fa-solid fa-phone search-icon"></i>
+                            <input type="tel" id="ContactPhone" name="ContactNumber" class="search-input" placeholder="Phone Number (e.g., 01xxxxxxxxx)" inputmode="numeric" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
+                        </div>
+
+                        <!-- Email Input (Hidden by default) -->
+                        <div id="emailInputContainer" class="search-input-group mb-4" style="display: none;">
+                            <i class="fa-solid fa-envelope search-icon"></i>
+                            <input type="email" id="ContactEmail" name="ContactEmail" class="search-input" placeholder="Email Address (e.g., student@ejust.edu.eg)" />
+                        </div>
                     </div>
 
                     <!-- Submit Button -->
@@ -294,13 +324,13 @@
                             {
                                 string statusColor = item.Status == "Returned" ? "var(--secondary)" : "var(--accent)";
 
-                                <form method="post" asp-action="UpdateStatus" asp-controller="Items" id="statusForm-@item.Id" class="status-form">
+                                <form method="post" asp-action="UpdateStatus" asp-controller="Items" id="statusForm-@item.Id" class="status-form" style="max-width: 120px;">
                                     <!-- Generating Hidden Security Token -->
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="id" value="@item.Id" />
 
                                     <!-- Native Auto-Submitting Select -->
-                                    <select name="newStatus" class="status-trigger" style="color: @statusColor; appearance: auto; cursor: pointer; padding-right: 1.5rem; font-weight: 600;" onchange="this.form.submit()">
+                                    <select name="newStatus" class="native-status-select" style="color: @statusColor;" onchange="this.form.submit()">
                                         @if (item.Status == "Returned")
                                         {
                                             <option value="Active">Active</option>
@@ -340,6 +370,7 @@
             return;
         }
 
+        // Duplicate Report Check
         @if (!string.IsNullOrEmpty(duplicateMessage))
         {
                 <text>
@@ -362,10 +393,70 @@
                 </text>
         }
 
+        // Toggle Logic for Contact Method
+        var phoneRadio = document.getElementById('choicePhone');
+        var emailRadio = document.getElementById('choiceEmail');
+        var phoneContainer = document.getElementById('phoneInputContainer');
+        var emailContainer = document.getElementById('emailInputContainer');
+        var phoneInput = document.getElementById('ContactPhone');
+        var emailInput = document.getElementById('ContactEmail');
+
+        if (phoneRadio && emailRadio) {
+            function updateContactUI() {
+                if (phoneRadio.checked) {
+                    phoneContainer.style.display = 'flex';
+                    emailContainer.style.display = 'none';
+                    emailInput.value = ''; // Clear email if they switch to phone
+                } else {
+                    phoneContainer.style.display = 'none';
+                    emailContainer.style.display = 'flex';
+                    phoneInput.value = ''; // Clear phone if they switch to email
+                }
+            }
+
+            phoneRadio.addEventListener('change', updateContactUI);
+            emailRadio.addEventListener('change', updateContactUI);
+        }
+
+        // Submission & Validation
         var form = document.getElementById('reportItemForm');
         if (form) {
             form.addEventListener('submit', function (e) {
                 e.preventDefault();
+
+                // Validate the selected contact method
+                var selectedChoice = document.querySelector('input[name="contactChoice"]:checked').value;
+                var phone = phoneInput ? phoneInput.value.trim() : '';
+                var email = emailInput ? emailInput.value.trim() : '';
+
+                var isInvalid = false;
+                var errorMessage = "";
+
+                if (selectedChoice === 'phone' && !phone) {
+                    isInvalid = true;
+                    errorMessage = "Please enter your phone number.";
+                } else if (selectedChoice === 'email' && !email) {
+                    isInvalid = true;
+                    errorMessage = "Please enter your email address.";
+                }
+
+                if (isInvalid) {
+                    Swal.fire({
+                        title: 'Contact Info Missing',
+                        text: errorMessage,
+                        icon: 'warning',
+                        buttonsStyling: false,
+                        customClass: {
+                            popup: 'swal-glass-popup',
+                            title: 'swal-glass-title',
+                            htmlContainer: 'swal-glass-text',
+                            confirmButton: 'swal-glass-confirm'
+                        }
+                    });
+                    return; // Stop submission
+                }
+
+                // If valid, show confirmation
                 Swal.fire({
                     title: 'Report this item?',
                     text: "Are you sure all the details and photos are correct?",
@@ -390,6 +481,7 @@
             console.warn('reportItemForm not found');
         }
 
+        // Success Message
         @if (!string.IsNullOrEmpty(successMessage))
         {
                 <text>

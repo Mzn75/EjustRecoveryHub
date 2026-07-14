@@ -100,13 +100,12 @@
                                                 if (revealBtn) {
                                                     revealBtn.addEventListener('click', function () {
 
-                                                        // 1. Show a loading state to the user so they know it's working
+                                                        // 1. Show a loading state
                                                         var originalText = revealBtn.innerHTML;
                                                         revealBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Loading...';
                                                         revealBtn.disabled = true;
 
-                                                        // 2. Make a secure POST request to the server to fetch the number
-                                                        // Bots scraping GET requests will never trigger this.
+                                                        // 2. Fetch the data securely
                                                         fetch('@Url.Action("RevealContact", "Items")', {
                                                             method: 'POST',
                                                             headers: {
@@ -121,24 +120,49 @@
                                                             revealBtn.disabled = false;
 
                                                             if (data.success) {
-                                                                var phone = data.phone;
-                                                                // Format the number for WhatsApp (assuming Egypt +20)
-                                                                var waNumber = "+20" + phone.replace(/^0+/, '');
 
-                                                                // 3. Build the HTML dynamically now that we have the real data
+                                                                // 3. Start building the HTML
                                                                 var contactButtonsHtml = `
                                                                     <p class="text-muted mb-4" style="font-size: 0.95rem;">
                                                                         Please be respectful when contacting the finder.
                                                                     </p>
                                                                     <div class="d-flex flex-column gap-3">
+                                                                `;
+
+                                                                // Add Phone & WhatsApp buttons ONLY if a phone number exists
+                                                                if (data.phone) {
+                                                                    var phone = data.phone;
+                                                                    var waNumber = "+20" + phone.replace(/^0+/, '');
+
+                                                                    contactButtonsHtml += `
                                                                         <a href="tel:${phone}" class="search-btn w-100 text-white btn-contact-call d-block">
                                                                             <i class="fa-solid fa-phone me-2"></i> Call ${phone}
                                                                         </a>
                                                                         <a href="https://wa.me/${waNumber}" target="_blank" class="search-btn w-100 text-white btn-contact-wa d-block">
                                                                             <i class="fa-brands fa-whatsapp me-2"></i> WhatsApp
                                                                         </a>
-                                                                    </div>
-                                                                `;
+                                                                    `;
+                                                                }
+
+                                                                // Add Email button ONLY if an email exists
+                                                                if (data.email) {
+                                                                    var email = data.email;
+
+                                                                                                            // Create a pre-filled subject line (URL encoded so spaces don't break the link)
+                                            var subject = encodeURIComponent("Regarding your found item on E-JUST Recovery Hub");
+
+                                            // The secret Gmail compose URL
+                                            var gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=${subject}`;
+
+                                            contactButtonsHtml += `
+                                                <a href="${gmailUrl}" target="_blank" class="search-btn w-100 text-white d-block" style="background: #ea4335; border: none; text-decoration: none; padding: 0.8rem;">
+                                                    <i class="fa-brands fa-google me-2"></i> Email via Gmail
+                                                </a>
+                                            `;
+                                                                }
+
+                                                                // Close the div container
+                                                                contactButtonsHtml += `</div>`;
 
                                                                 // 4. Fire the SweetAlert2 popup
                                                                 Swal.fire({
@@ -156,7 +180,7 @@
                                                                     }
                                                                 });
                                                             } else {
-                                                                // Handle failure (e.g., item deleted or no number)
+                                                                // Handle failure
                                                                 Swal.fire({
                                                                     title: 'Error',
                                                                     text: data.message,
