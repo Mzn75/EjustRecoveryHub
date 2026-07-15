@@ -22,8 +22,8 @@
 
 		<div class="search-wrapper">
 
-			<form asp-controller="Search" asp-action="Search" method="get" class="custom-search-form form-stacked">
-
+			<form asp-controller="Search" asp-action="Search" method="post" class="custom-search-form form-stacked">
+				@Html.AntiForgeryToken()
 				<!-- Item Category -->
 				<div class="custom-dropdown-wrapper mb-4">
 
@@ -57,7 +57,7 @@
 					</div>
 
 					<select id="itemCategory" name="Category" required style="display: none;">
-						<option value="" disabled selected>-- Choose Item Type --</option>
+						<option value="" disabled selected>  Choose Item Type  </option>
 						<option value="id">ID Card</option>
 						<option value="wallet">Wallet</option>
 						<option value="device">Electronic Device</option>

@@ -30,9 +30,11 @@ namespace EjustRecoveryHub.Models
 
         public string? WalletColor { get; set; }
         public string? WalletBrandOrMaterial { get; set; }
+        public string? WalletDescription { get; set; }
 
         public string? JewelryMaterial { get; set; }
         public string? JewelryType { get; set; }
+        public string? JewelryDescription { get; set; }
 
         public string? NotebookColor { get; set; }
     }

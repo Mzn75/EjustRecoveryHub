@@ -55,7 +55,8 @@ namespace EjustRecoveryHub.Controllers
             return View(searchResults);
         }
 
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Search(ItemViewModel searchData)
         {
             // 1. Validate Category
@@ -71,6 +72,7 @@ namespace EjustRecoveryHub.Controllers
             switch (searchData.Category.ToLower())
             {
                 case "id":
+
                     // Filter down into the specific IdItems table
                     var idQuery = query.OfType<IdItem>();
 
