@@ -298,9 +298,9 @@ namespace EjustRecoveryHub.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(Guid id)
         {
-            var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
+            var item = await _context.Items.FirstOrDefaultAsync(i => i.PublicId == id);
 
             if (item == null)
             {

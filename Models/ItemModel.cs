@@ -10,6 +10,7 @@ namespace EjustRecoveryHub.Models
     {
         [Key]
         public int Id { get; set; }
+        public Guid PublicId { get; set; } = Guid.NewGuid();
         [Required]
         public string Category { get; set; }
         public DateTime DateReported { get; set; }

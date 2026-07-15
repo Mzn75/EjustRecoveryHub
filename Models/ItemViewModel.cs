@@ -6,6 +6,7 @@ namespace EjustRecoveryHub.Models
     {
         // --- Required Form Inputs ---
         public int Id { get; set; }
+        public Guid PublicId { get; set; }
         [Required(ErrorMessage = "Please select a category.")]
         public string? Category { get; set; }
 
