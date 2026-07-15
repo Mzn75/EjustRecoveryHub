@@ -278,7 +278,7 @@ namespace EjustRecoveryHub.Controllers
 
             if (attempts >= 3)
             {
-                return Json(new { success = false, message = "For privacy, you can only reveal 3 contact numbers per day. Please try again tomorrow." });
+                return Json(new { success = false, message = "For privacy, you can only reveal 3 contact informations per day. Please try again tomorrow." });
             }
 
             var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
