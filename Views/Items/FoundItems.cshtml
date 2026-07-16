@@ -215,11 +215,11 @@
             <h3 class="mb-4 mt-5 feed-title">Items You Recently Found</h3>
         </div>
 
-        @if (ViewBag.RecentItems != null && ViewBag.RecentItems.Count > 0)
+        @if (ViewBag.MyItems != null && ViewBag.MyItems.Count > 0)
         {
             
             <div class="feed-list">
-                @foreach (var item in ViewBag.RecentItems)
+                @foreach (var item in ViewBag.MyItems)
                 {
                     var localTime = TimeZoneInfo.ConvertTimeFromUtc(item.DateReported, egyptTimeZone);
                     <div class="element-card freeze-hover feed-card-horizontal">

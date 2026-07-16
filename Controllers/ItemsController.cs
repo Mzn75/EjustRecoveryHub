@@ -226,7 +226,9 @@ namespace EjustRecoveryHub.Controllers
             Response.Cookies.Append("MyReportedItems", encryptedString, new CookieOptions
             {
                 HttpOnly = true, // Prevents JavaScript from reading the cookie
-                Expires = DateTimeOffset.UtcNow.AddDays(30)
+                Secure = true,   // Ensures it only sends over HTTPS
+                SameSite = SameSiteMode.Strict, // Prevents cross-site request forgery
+                Expires = DateTimeOffset.UtcNow.AddDays(30) // Keeps it alive for a month
             });
 
             TempData["SuccessMessage"] = "Item successfully reported! Thank you for helping.";
