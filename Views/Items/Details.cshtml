@@ -2,6 +2,9 @@
 
 @{
     ViewData["Title"] = "Item Details";
+
+    var egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
+    var localTime = TimeZoneInfo.ConvertTimeFromUtc(Model.DateReported, egyptTimeZone);
 }
 
 <head>
@@ -33,7 +36,7 @@
 
             <div class="details-body">
 
-                <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-4 mb-4">
                     <div>
                         <span class="card-badge badge-solid-primary mb-2 d-inline-block">Found Item #@Model.Id</span>
                         <h2 class="details-title m-0">
@@ -61,6 +64,12 @@
                                     break;
                             }
                         </h2>
+                    </div>
+
+                    <div class="card-badge badge-solid-primary position-static m-0 d-inline-block" style="transform: none;">
+                        <span style="font-size: 0.9rem; font-weight: 500;">
+                            <i class="fa-regular fa-clock me-1"></i> @localTime.ToString("dd MMM yyyy, hh:mm tt")
+                        </span>
                     </div>
                 </div>
 

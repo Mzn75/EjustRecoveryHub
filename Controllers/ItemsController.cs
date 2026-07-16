@@ -28,10 +28,7 @@ namespace EjustRecoveryHub.Controllers
         public async Task<IActionResult> FoundItems(string filter = "recent")
         {
             // 1. Setup Ownership Cookies
-            string userReportedIds = Request.Cookies["MyReportedItems"] ?? "";
-            var idList = string.IsNullOrEmpty(userReportedIds)
-                ? new List<int>()
-                : userReportedIds.Split(',', StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToList();
+            var idList = GetDecryptedCookieIds();
 
             ViewBag.MyReportedIds = idList;
             ViewBag.CurrentFilter = filter;
