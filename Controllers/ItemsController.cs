@@ -1,23 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using EjustRecoveryHub.Data;
+﻿using EjustRecoveryHub.Data;
 using EjustRecoveryHub.Models;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 
 namespace EjustRecoveryHub.Controllers
 {
     public class ItemsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IDataProtector _protector;
 
-        public ItemsController(ApplicationDbContext context)
+        public ItemsController(ApplicationDbContext context, IDataProtectionProvider provider)
         {
             _context = context;
+            _protector = provider.CreateProtector("ReportedItemsCookieLock");
         }
 
         [HttpGet]
@@ -76,7 +80,7 @@ namespace EjustRecoveryHub.Controllers
 
             ItemModel newDbItem = null;
             bool isDuplicate = false;
-            DateTime timeThreshold = DateTime.Now.AddHours(-24);
+            DateTime timeThreshold = DateTime.UtcNow.AddHours(-24);
 
             // Map the ViewModel form to the strict Relational Database objects
             if (!string.IsNullOrEmpty(form.Category))
@@ -206,19 +210,26 @@ namespace EjustRecoveryHub.Controllers
                 }
             }
 
-            newDbItem.DateReported = DateTime.Now;
+            newDbItem.DateReported = DateTime.UtcNow;
             _context.Items.Add(newDbItem);
             await _context.SaveChangesAsync();
 
             // Setup Browser Cookie
-            string existingIds = Request.Cookies["MyReportedItems"] ?? "";
-            string newCookieValue = string.IsNullOrEmpty(existingIds)
-                ? newDbItem.Id.ToString()
-                : existingIds + "," + newDbItem.Id.ToString();
+            // 1. Get existing secure IDs using the helper method we created
+            List<int> myReportedIds = GetDecryptedCookieIds();
 
-            Response.Cookies.Append("MyReportedItems", newCookieValue, new CookieOptions
+            // 2. Add the new item's integer ID
+            myReportedIds.Add(newDbItem.Id);
+
+            // 3. Serialize to JSON and Encrypt!
+            string jsonString = JsonSerializer.Serialize(myReportedIds);
+            string encryptedString = _protector.Protect(jsonString);
+
+            // 4. Save the locked cookie
+            Response.Cookies.Append("MyReportedItems", encryptedString, new CookieOptions
             {
-                Expires = DateTimeOffset.Now.AddDays(30)
+                HttpOnly = true, // Prevents JavaScript from reading the cookie
+                Expires = DateTimeOffset.UtcNow.AddDays(30)
             });
 
             TempData["SuccessMessage"] = "Item successfully reported! Thank you for helping.";
@@ -237,14 +248,9 @@ namespace EjustRecoveryHub.Controllers
             }
 
             // 2. Safe Cookie Parsing
-            string userReportedIds = Request.Cookies["MyReportedItems"] ?? "";
-            var authorizedIdList = userReportedIds
-                .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                .Where(x => int.TryParse(x, out _)) // Protects against corrupted cookies
-                .Select(int.Parse)
-                .ToList();
+            List<int> authorizedIdList = GetDecryptedCookieIds();
 
-            // 3. Security Check
+            // 3. Security Check (IDOR Protection)
             if (!authorizedIdList.Contains(id))
             {
                 TempData["DuplicateMessage"] = "Security Alert: You do not have permission to update this item.";
@@ -252,7 +258,6 @@ namespace EjustRecoveryHub.Controllers
             }
 
             var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
-
             if (item != null)
             {
                 item.Status = newStatus;
@@ -261,6 +266,28 @@ namespace EjustRecoveryHub.Controllers
             }
 
             return RedirectToAction("FoundItems");
+        }
+
+        private List<int> GetDecryptedCookieIds()
+        {
+            var encryptedCookie = Request.Cookies["MyReportedItems"];
+            if (string.IsNullOrEmpty(encryptedCookie))
+            {
+                return new List<int>(); // No cookie found
+            }
+
+            try
+            {
+                // Attempts to unlock the data
+                var decryptedJson = _protector.Unprotect(encryptedCookie);
+                return JsonSerializer.Deserialize<List<int>>(decryptedJson) ?? new List<int>();
+            }
+            catch (System.Security.Cryptography.CryptographicException)
+            {
+                // 🚨 A hacker tampered with the cookie text in DevTools!
+                // The Unprotect method automatically throws an exception if the signature doesn't match.
+                return new List<int>();
+            }
         }
 
         [HttpGet]

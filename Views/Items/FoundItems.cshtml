@@ -8,6 +8,8 @@
 
     var isDuplicate = ViewBag.Duplicate == true || !string.IsNullOrEmpty(duplicateMessage);
 
+    var egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
+
     // 2. NUKE THEM! Force the server to forget them immediately
     TempData.Remove("SuccessMessage");
     TempData.Remove("DuplicateMessage");
@@ -214,9 +216,11 @@
 
         @if (ViewBag.RecentItems != null && ViewBag.RecentItems.Count > 0)
         {
+            
             <div class="feed-list">
                 @foreach (var item in ViewBag.RecentItems)
                 {
+                    var localTime = TimeZoneInfo.ConvertTimeFromUtc(item.DateReported, egyptTimeZone);
                     <div class="element-card freeze-hover feed-card-horizontal">
 
                         <!-- Left Side: Image -->
@@ -346,7 +350,7 @@
                             }
 
                             <span class="card-badge badge-found badge-static">
-                                Reported: @item.DateReported.ToString("MMM dd, yyyy")
+                                Reported: @localTime.ToString("MMM dd yyyy 'At' hh:mm tt")
                             </span>
                         </div>
                     </div>
