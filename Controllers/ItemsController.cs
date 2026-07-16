@@ -296,6 +296,7 @@ namespace EjustRecoveryHub.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RevealContact(int id)
         {
             // MISSING RATE LIMITING RESTORED
