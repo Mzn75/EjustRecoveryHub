@@ -137,20 +137,9 @@ function previewImage(input) {
     const textContainer = document.getElementById('uploadTextContainer');
     const labelBtn = document.getElementById('uploadLabel');
 
-    if (input.files && input.files[0]) {
-        // 1. Create a temporary URL for the image
-        imgPreview.src = URL.createObjectURL(input.files[0]);
-
-        // 2. Show the image, hide the text
-        imgPreview.style.display = 'block';
-        textContainer.style.display = 'none';
-
-        // 3. Clean up the padding so the image fills the box perfectly
-        labelBtn.style.padding = '0.5rem';
-        labelBtn.style.background = '#ffffff';
-        labelBtn.style.border = '2px solid var(--primary)';
-    } else {
-        // If the user cancels, put everything back to normal
+    // Helper function to reset your UI to the default state
+    function resetUI() {
+        input.value = ''; // Wipes the bad file from the input
         imgPreview.src = '';
         imgPreview.style.display = 'none';
         textContainer.style.display = 'block';
@@ -158,5 +147,49 @@ function previewImage(input) {
         labelBtn.style.padding = '1.2rem';
         labelBtn.style.background = '';
         labelBtn.style.border = '';
+    }
+
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+
+        // 1. Client-Side Extension Check
+        const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+        if (!allowedExtensions.exec(input.value)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Format',
+                text: 'Please select a valid image.',
+                confirmButtonColor: '#dc3545' // Bootstrap danger red
+            });
+            resetUI();
+            return;
+        }
+
+        // 2. Client-Side Size Check (5MB = 5 * 1024 * 1024 bytes)
+        if (file.size > 5242880) {
+            Swal.fire({
+                icon: 'error',
+                title: 'File Too Large',
+                text: 'Your image must be under 5MB.',
+                confirmButtonColor: '#dc3545'
+            });
+            resetUI();
+            return;
+        }
+
+        // 3. Create a temporary URL for the image (if it passes validation)
+        imgPreview.src = URL.createObjectURL(file);
+
+        // 4. Show the image, hide the text
+        imgPreview.style.display = 'block';
+        textContainer.style.display = 'none';
+
+        // 5. Clean up the padding so the image fills the box perfectly
+        labelBtn.style.padding = '0.5rem';
+        labelBtn.style.background = '#ffffff';
+        labelBtn.style.border = '2px solid var(--primary)';
+    } else {
+        // If the user cancels, put everything back to normal
+        resetUI();
     }
 }

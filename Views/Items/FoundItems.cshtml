@@ -143,6 +143,7 @@
                     <hr class="form-divider" />
                     <div class="custom-file-upload mb-4">
                         <input type="file" id="ItemPhoto" name="ItemPhoto" class="d-none" accept="image/*" onchange="previewImage(this)" />
+                        <span asp-validation-for="ItemPhoto" class="text-danger" style="color: red;"></span>
                         <label for="ItemPhoto" class="upload-glass-btn" id="uploadLabel">
                             <img id="imagePreview" src="" alt="Item Preview" class="image-preview-thumbnail" style="display: none;" />
                             <div id="uploadTextContainer">
