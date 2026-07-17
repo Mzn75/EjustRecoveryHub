@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EjustRecoveryHub.Models
 {
-    // Tells EF to make a separate relational table just for wallets
+    // Tells Entity Framework to make a separate relational table just for wallets
     [Table("WalletItems")]
     public class WalletItem : ItemModel
     {

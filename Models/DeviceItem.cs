@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EjustRecoveryHub.Models
 {
-    // Tells EF to make a separate relational table just for devices
+    // Tells Entity Framework to make a separate relational table just for devices
     [Table("DeviceItems")]
     public class DeviceItem : ItemModel
     {

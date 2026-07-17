@@ -8,13 +8,13 @@ namespace EjustRecoveryHub.Models
 
     public abstract class ItemModel
     {
+        // Universal properties for all items
         [Key]
         public int Id { get; set; }
         public Guid PublicId { get; set; } = Guid.NewGuid();
         [Required]
-        public string Category { get; set; }
+        public string? Category { get; set; }
         public DateTime DateReported { get; set; }
-        //public string? Category { get; set; }
         public string? ContactNumber { get; set; }
         public string? ContactEmail { get; set; }
 

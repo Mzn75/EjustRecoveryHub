@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EjustRecoveryHub.Models
 {
+    // Tells Entity Framework to make a separate relational table just for notebooks
     [Table("NotebookItems")]
     public class NotebookItem : ItemModel
     {

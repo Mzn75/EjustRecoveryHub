@@ -5,6 +5,7 @@ namespace EjustRecoveryHub.Data
 {
     public class ApplicationDbContext : DbContext
     {
+        // Constructor to initialize the DbContext with options
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         // The Master Table
@@ -17,11 +18,12 @@ namespace EjustRecoveryHub.Data
         public DbSet<JewelryItem> JewelryItems { get; set; }
         public DbSet<NotebookItem> NotebookItems { get; set; }
 
+        // Override the OnModelCreating method to configure the model
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // This strictly enforces the Table-Per-Type (TPT) architecture in SQL Server
+            // Configure the table names for each entity
             modelBuilder.Entity<ItemModel>().ToTable("Items");
             modelBuilder.Entity<IdItem>().ToTable("IdItems");
             modelBuilder.Entity<DeviceItem>().ToTable("DeviceItems");
