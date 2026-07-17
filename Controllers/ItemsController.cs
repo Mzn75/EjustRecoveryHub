@@ -93,7 +93,9 @@ namespace EjustRecoveryHub.Controllers
                 {
                     case "id":
                         // Check for duplicates
-                        isDuplicate = await _context.IdItems.AnyAsync(i => i.IdNumber == form.IdNumber);
+                        isDuplicate = await _context.IdItems.AnyAsync(i => 
+                        i.DateReported >= timeThreshold &&
+                        i.IdNumber == form.IdNumber.Trim());
                         // Create a new ID item to be added to the database
                         newDbItem = new IdItem
                         {
@@ -112,7 +114,8 @@ namespace EjustRecoveryHub.Controllers
                         isDuplicate = await _context.DeviceItems.AnyAsync(i =>
                             i.DateReported >= timeThreshold &&
                             i.DeviceBrand.ToLower() == form.DeviceBrand.Trim().ToLower() &&
-                            i.DeviceModel.ToLower() == form.DeviceModel.Trim().ToLower());
+                            i.DeviceModel.ToLower() == form.DeviceModel.Trim().ToLower() &&
+                            i.LocationFound.ToLower() == form.LocationFound.Trim().ToLower() );
                         // Create a new Device item to be added to the database
                         newDbItem = new DeviceItem
                         {
@@ -131,8 +134,8 @@ namespace EjustRecoveryHub.Controllers
                         // Check for duplicates
                         isDuplicate = await _context.WalletItems.AnyAsync(i =>
                             i.DateReported >= timeThreshold &&
-                            i.WalletColor == form.WalletColor &&
-                            i.LocationFound == form.LocationFound);
+                            i.WalletColor.ToLower() == form.WalletColor.Trim().ToLower() &&
+                            i.LocationFound.ToLower() == form.LocationFound.Trim().ToLower());
                         // Create a new Wallet item to be added to the database
                         newDbItem = new WalletItem
                         {
@@ -150,8 +153,8 @@ namespace EjustRecoveryHub.Controllers
                         // Check for duplicates
                         isDuplicate = await _context.JewelryItems.AnyAsync(i =>
                             i.DateReported >= timeThreshold &&
-                            i.JewelryType == form.JewelryType &&
-                            i.LocationFound == form.LocationFound);
+                            i.JewelryType.ToLower() == form.JewelryType.Trim().ToLower() &&
+                            i.LocationFound.ToLower() == form.LocationFound.Trim().ToLower());
                         // Create a new Jewelry item to be added to the database
                         newDbItem = new JewelryItem
                         {
@@ -169,8 +172,8 @@ namespace EjustRecoveryHub.Controllers
                         // Check for duplicates
                         isDuplicate = await _context.NotebookItems.AnyAsync(i =>
                             i.DateReported >= timeThreshold &&
-                            i.NotebookColor == form.NotebookColor &&
-                            i.LocationFound == form.LocationFound);
+                            i.NotebookColor.ToLower() == form.NotebookColor.Trim().ToLower() &&
+                            i.LocationFound.ToLower() == form.LocationFound.Trim().ToLower());
                         // Create a new Notebook item to be added to the database
                         newDbItem = new NotebookItem
                         {
@@ -188,28 +191,35 @@ namespace EjustRecoveryHub.Controllers
             // 3. If duplicate or invalid category, return with error message
             if (isDuplicate || newDbItem == null)
             {
+                // Return with a message
                 TempData["DuplicateMessage"] = "This item has already been reported or the category is invalid.";
+                // Pass a boolean to the view
                 ViewBag.Duplicate = true;
                 return View("FoundItems", form);
             }
 
-            // Secure Photo Upload
+            // 4. Secure Photo Upload
             if (form.ItemPhoto != null && form.ItemPhoto.Length > 0)
             {
+                // Array of allowed extensions
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                // Get the file extension and convert to lower case for comparison
                 var extension = Path.GetExtension(form.ItemPhoto.FileName).ToLower();
-
+                // Validate the file extension and size
                 if (!allowedExtensions.Contains(extension) || form.ItemPhoto.Length > 5 * 1024 * 1024)
                 {
+                    // Return with an error message if the file is not valid
                     ModelState.AddModelError("ItemPhoto", "Please upload a valid image (JPG/PNG) under 5MB.");
                     return View("FoundItems", form);
                 }
 
+                // Generate a unique filename to prevent overwriting and save the file
                 var uniqueFileName = Guid.NewGuid().ToString() + extension;
                 var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
                 Directory.CreateDirectory(uploadsFolder);
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
+                // Try-catch block to handle potential exceptions during file upload
                 try
                 {
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -225,34 +235,37 @@ namespace EjustRecoveryHub.Controllers
                 }
             }
 
+            // 5. Save the new item to the database
             newDbItem.DateReported = DateTime.UtcNow;
             _context.Items.Add(newDbItem);
             await _context.SaveChangesAsync();
 
             // Setup Browser Cookie
-            // 1. Get existing secure IDs using the helper method we created
-            List<int> myReportedIds = GetDecryptedCookieIds();
+                // 1. Get existing secure IDs using the helper method
+                List<int> myReportedIds = GetDecryptedCookieIds();
 
-            // 2. Add the new item's integer ID
-            myReportedIds.Add(newDbItem.Id);
+                // 2. Add the new item's integer ID
+                myReportedIds.Add(newDbItem.Id);
 
-            // 3. Serialize to JSON and Encrypt!
-            string jsonString = JsonSerializer.Serialize(myReportedIds);
-            string encryptedString = _protector.Protect(jsonString);
+                // 3. Serialize to JSON and Encrypt
+                string jsonString = JsonSerializer.Serialize(myReportedIds);
+                string encryptedString = _protector.Protect(jsonString);
 
-            // 4. Save the locked cookie
-            Response.Cookies.Append("MyReportedItems", encryptedString, new CookieOptions
-            {
-                HttpOnly = true, // Prevents JavaScript from reading the cookie
-                Secure = true,   // Ensures it only sends over HTTPS
-                SameSite = SameSiteMode.Strict, // Prevents cross-site request forgery
-                Expires = DateTimeOffset.UtcNow.AddDays(30) // Keeps it alive for a month
-            });
+                // 4. Save the locked cookie
+                Response.Cookies.Append("MyReportedItems", encryptedString, new CookieOptions
+                {
+                    HttpOnly = true, // Prevents JavaScript from reading the cookie
+                    Secure = true,   // Ensures it only sends over HTTPS
+                    SameSite = SameSiteMode.Strict, // Prevents cross-site request forgery
+                    Expires = DateTimeOffset.UtcNow.AddDays(30) // Keeps it alive for a month
+                });
 
+            // 6. Return with a success message
             TempData["SuccessMessage"] = "Item successfully reported! Thank you for helping.";
             return RedirectToAction("FoundItems");
         }
 
+        // Handle the update of an item's status with strict validation and security checks
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int id, string newStatus)
@@ -274,6 +287,7 @@ namespace EjustRecoveryHub.Controllers
                 return RedirectToAction("FoundItems");
             }
 
+            // 4. Update the item status in the database
             var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
             if (item != null)
             {
@@ -282,17 +296,21 @@ namespace EjustRecoveryHub.Controllers
                 TempData["SuccessMessage"] = $"Item status successfully updated to {newStatus}!";
             }
 
+            // 5. Redirect back to the FoundItems view
             return RedirectToAction("FoundItems");
         }
 
+        // Helper method to decrypt the cookie and retrieve the list of item IDs
         private List<int> GetDecryptedCookieIds()
         {
+            // 1. Retrieve the encrypted cookie from the request
             var encryptedCookie = Request.Cookies["MyReportedItems"];
             if (string.IsNullOrEmpty(encryptedCookie))
             {
                 return new List<int>(); // No cookie found
             }
 
+            // 2. Decrypt the cookie and deserialize the JSON into a list of integers
             try
             {
                 // Attempts to unlock the data
@@ -301,60 +319,68 @@ namespace EjustRecoveryHub.Controllers
             }
             catch (System.Security.Cryptography.CryptographicException)
             {
-                // 🚨 A hacker tampered with the cookie text in DevTools!
-                // The Unprotect method automatically throws an exception if the signature doesn't match.
+                // If decryption fails, return an empty list to avoid exposing any data
                 return new List<int>();
             }
         }
 
+        // Display the LostItems view
         [HttpGet]
         public IActionResult LostItems()
         {
             return View();
         }
 
+        // Handle the AJAX request to reveal contact information with rate limiting
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RevealContact(int id)
         {
-            // MISSING RATE LIMITING RESTORED
+            // 1. Rate Limiting: Check how many times the user has revealed contact info today
             string attemptsStr = Request.Cookies["RevealAttempts"] ?? "0";
             int.TryParse(attemptsStr, out int attempts);
-
+            // 2. Limit to 3 reveals per day to protect privacy
             if (attempts >= 3)
             {
                 return Json(new { success = false, message = "For privacy, you can only reveal 3 contact informations per day. Please try again tomorrow." });
             }
 
+            // 3. Fetch the item from the database
             var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
 
+            // 4. Check if the item exists and has contact information
             if (item == null || string.IsNullOrEmpty(item.ContactNumber) && string.IsNullOrEmpty(item.ContactEmail))
             {
                 return Json(new { success = false, message = "Contact info not available." });
             }
 
-            // Update Rate Limiting Cookie
+            // 5. Update Rate Limiting Cookie
             Response.Cookies.Append("RevealAttempts", (attempts + 1).ToString(), new CookieOptions
             {
                 Expires = DateTimeOffset.Now.AddHours(24)
             });
 
+            // 6. Return the contact information in JSON format
             return Json(new { success = true, phone = item.ContactNumber, email = item.ContactEmail });
         }
 
+        // Display the details of a specific item, masking sensitive information for privacy
         [HttpGet]
         public async Task<IActionResult> Details(Guid id)
         {
+            // 1. Fetch the item from the database using the public ID
             var item = await _context.Items.FirstOrDefaultAsync(i => i.PublicId == id);
 
+            // 2. If the item does not exist, redirect to a 404 error page
             if (item == null)
             {
                 return RedirectToAction("Error404", "Home");
             }
 
-            // MISSING SECURITY FIX: Mask the number in the raw HTML so scrapers can't read it!
+            // 3. Mask sensitive information to protect privacy
             item.ContactNumber = "Protected for Privacy";
 
+            // 4. Return the item details view with the masked information
             return View(item);
         }
     }
