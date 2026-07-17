@@ -2,17 +2,16 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<head>
-    <title>E-JUST Recovery Hub</title>
-</head>
-
 <!-- Sidebar Button -->
 <button class="mobile-menu-btn d-lg-none">
+    <!-- Icon -->
     <i class="fas fa-bars"></i>
 </button>
 
+<!-- Main Div -->
 <div class="glass-container">
     <main class="main-content">
+        <!-- The Header Section -->
         <div class="content-header">
             <div class="welcome-section">
                 <h2>Welcome to E-JUST Recovery Hub</h2>
@@ -20,11 +19,13 @@
             </div>
         </div>
 
+        <!-- Dashboard Elements -->
         <div class="elements-grid">
 
             <!--Lost Items Page-->
             <div class="element-card">
                 <div class="card-header">
+                    <!-- Image src by Razor -->
                     <img src="@Url.Content("~/img/lost.svg")" alt="Lost Items" class="card-image">
                     <div class="card-overlay">
                         <h3 class="card-title">I Lost an item</h3>
@@ -36,6 +37,7 @@
                         Search for your lost items and connect with finders to recover them quickly and easily.
                     </p>
                     <div class="card-actions">
+                        <!-- Action on Click -->
                         <a href="@Url.Action("LostItems", "Items")" class="btn-primary">
                             <i class="fas fa-search me-2"></i>
                             Search Lost Items
@@ -47,6 +49,7 @@
             <!--Found Items Page-->
             <div class="element-card">
                 <div class="card-header">
+                    <!-- Image src by Razor -->
                     <img src="@Url.Content("~/img/found.svg")" alt="Found Items" class="card-image">
                     <div class="card-overlay">
                         <h3 class="card-title">I Found an item</h3>
@@ -58,6 +61,7 @@
                         Report found items and help others recover their lost belongings.
                     </p>
                     <div class="card-actions">
+                        <!-- Action on Click -->
                         <a href="@Url.Action("FoundItems", "Items")" class="btn-primary">
                             <i class="fa-solid fa-box-open me-2"></i>
                             Report Found Item

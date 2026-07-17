@@ -2,15 +2,16 @@
 @{
     ViewData["Title"] = "Report Found Items";
 
-    // 1. Read the messages
+    // Get the messages & variables from backend
+    // 1. The messages
     var successMessage = TempData["SuccessMessage"] as string;
     var duplicateMessage = TempData["DuplicateMessage"] as string;
-
+    // 2. The duplicate check flag
     var isDuplicate = ViewBag.Duplicate == true || !string.IsNullOrEmpty(duplicateMessage);
-
+    // 3. Egypt Time Zone for displaying the reported time in local time
     var egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
 
-    // 2. NUKE THEM! Force the server to forget them immediately
+    // Force the server to forget the messages after rendering, so they don't persist on refresh
     TempData.Remove("SuccessMessage");
     TempData.Remove("DuplicateMessage");
 }
@@ -20,20 +21,25 @@
     <i class="fas fa-bars"></i>
 </button>
 
+<!-- Main Content -->
 <div class="glass-container">
+
     <main class="main-content">
+
+        <!-- The Header Section -->
         <div class="content-header welcome-section">
             <h2>Report Found Items</h2>
             <p>Help a fellow student by registering what you found.</p>
         </div>
 
         <div class="search-wrapper">
+            <!-- The Form for Reporting Found Items -->
             <form id="reportItemForm" asp-controller="Items" asp-action="SubmitFoundItem" method="post" enctype="multipart/form-data" class="custom-search-form form-stacked">
 
                 <!-- Generating Hidden Security Token -->
                 @Html.AntiForgeryToken()
 
-                <!-- Accessible Custom Dropdown -->
+                <!-- Custom Dropdown List -->
                 <div class="custom-dropdown-wrapper mb-4">
 
                     <!-- Hidden native select for the actual form submission -->
@@ -46,7 +52,7 @@
                         <option value="notebook">Notebook</option>
                     </select>
 
-                    <!-- The Custom Trigger (Focusable) -->
+                    <!-- The Custom Trigger -->
                     <div class="search-input-group custom-dropdown-trigger" id="customDropdownTrigger"
                          tabindex="0" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="customDropdownMenu">
                         <i class="fa-solid fa-layer-group search-icon"></i>
@@ -62,6 +68,7 @@
                         <div class="custom-option" role="option" tabindex="-1" data-value="jewelry">Accessories</div>
                         <div class="custom-option" role="option" tabindex="-1" data-value="notebook">Notebook</div>
                     </div>
+
                 </div>
 
                 <!-- Dynamic Fields Container -->
@@ -69,81 +76,111 @@
 
                     <!-- ID Card Fields -->
                     <div id="fields-id" class="dynamic-group">
+
+                        <!-- Name on ID Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-id-card search-icon"></i>
                             <input type="text" name="IdName" class="search-input dynamic-input" placeholder="Name written on the ID" />
                         </div>
+
+                        <!-- ID Number Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-hashtag search-icon"></i>
                             <input type="text" name="IdNumber" class="search-input dynamic-input" placeholder="ID Number / Student ID" />
                         </div>
+
                     </div>
 
                     <!-- Wallet Fields -->
                     <div id="fields-wallet" class="dynamic-group">
+
+                        <!-- Wallet Color Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-palette search-icon"></i>
                             <input type="text" name="WalletColor" class="search-input dynamic-input" placeholder="Color (e.g., Black, Brown)" />
                         </div>
+
+                        <!-- Wallet Brand or Material Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-brands fa-cc-visa search-icon"></i>
                             <input type="text" name="WalletBrandOrMaterial" class="search-input dynamic-input" placeholder="Brand or Material (e.g., Leather)" />
                         </div>
+
+                        <!-- Wallet Description Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-align-left search-icon"></i>
                             <input type="text" name="WalletDescription" class="search-input dynamic-input" placeholder="Description (e.g., Custom Design, Special Mark, Color)" />
                         </div>
+
                     </div>
 
                     <!-- Device Fields -->
                     <div id="fields-device" class="dynamic-group">
+
+                        <!-- Device Brand Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-mobile-screen search-icon"></i>
                             <input type="text" name="DeviceBrand" class="search-input dynamic-input" placeholder="Brand (e.g., Samsung, Apple)" />
                         </div>
+
+                        <!-- Device Model Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-microchip search-icon"></i>
                             <input type="text" name="DeviceModel" class="search-input dynamic-input" placeholder="Model (e.g., iPhone 15)" />
                         </div>
+
+                        <!-- Device Description Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-align-left search-icon"></i>
                             <input type="text" name="DeviceDescription" class="search-input dynamic-input" placeholder="Description (e.g., Cover Shape, Wallpaper)" />
                         </div>
+
                     </div>
 
                     <!-- Jewelry Fields -->
                     <div id="fields-jewelry" class="dynamic-group">
+
+                        <!-- Jewelry Type Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-ring search-icon"></i>
                             <input type="text" name="JewelryType" class="search-input dynamic-input" placeholder="Type (e.g., Ring, Necklace, Watch)" />
                         </div>
+
+                        <!-- Jewelry Material Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-gem search-icon"></i>
                             <input type="text" name="JewelryMaterial" class="search-input dynamic-input" placeholder="Material (e.g., Gold, Silver)" />
                         </div>
+
+                        <!-- Jewelry Description Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-align-left search-icon"></i>
                             <input type="text" name="JewelryDescription" class="search-input dynamic-input" placeholder="Description (e.g., Engraving, Gemstone, Color)" />
                         </div>
+
                     </div>
 
                     <!-- Notebook Fields -->
                     <div id="fields-notebook" class="dynamic-group">
+
+                        <!-- Notebook Color Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-book search-icon"></i>
                             <input type="text" name="NotebookColor" class="search-input dynamic-input" placeholder="Color (e.g., Red, Blue)" />
                         </div>
+
+                        <!-- Notebook Description Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-align-left search-icon"></i>
                             <input type="text" name="NotebookDescription" class="search-input dynamic-input" placeholder="Description (e.g., Name, Shape, Special Marks)" />
                         </div>
+
                     </div>
 
                     <!-- Photo Upload -->
                     <hr class="form-divider" />
                     <div class="custom-file-upload mb-4">
                         <input type="file" id="ItemPhoto" name="ItemPhoto" class="d-none" accept="image/*" onchange="previewImage(this)" />
-                        <span asp-validation-for="ItemPhoto" class="text-danger" style="color: red;"></span>
                         <label for="ItemPhoto" class="upload-glass-btn" id="uploadLabel">
                             <img id="imagePreview" src="" alt="Item Preview" class="image-preview-thumbnail" style="display: none;" />
                             <div id="uploadTextContainer">
@@ -153,20 +190,21 @@
                         </label>
                     </div>
 
-                    <!-- Location Found -->
+                    <!-- Location Found Field -->
                     <div class="search-input-group mb-3">
                         <i class="fa-solid fa-location-dot search-icon"></i>
                         <input type="text" name="LocationFound" class="search-input" placeholder="Exact location you found it" required />
                     </div>
 
-                    <!-- Item Location -->
+                    <!-- Current Item Location Field -->
                     <div class="search-input-group mb-4">
                         <i class="fa-solid fa-building-shield search-icon"></i>
                         <input type="text" name="ItemLocation" class="search-input" placeholder="Where is the item now ?" required />
                     </div>
 
-                    <!-- Contact Information -->
                     <hr class="form-divider" />
+
+                    <!-- Contact Information Fields -->
                     <div class="mb-4">
                         <label class="info-label mb-3 d-block" style="color: var(--dark); font-weight: 600;">
                             How should the owner contact you?
@@ -174,12 +212,16 @@
 
                         <!-- The Toggle Switches -->
                         <div class="d-flex gap-4 mb-3 px-2">
+
+                            <!-- Phone Number Option -->
                             <div class="form-check custom-radio">
                                 <input class="form-check-input" type="radio" name="contactChoice" id="choicePhone" value="phone" checked style="cursor: pointer;">
                                 <label class="form-check-label" for="choicePhone" style="cursor: pointer; color: var(--dark);">
                                     Phone Number
                                 </label>
                             </div>
+
+                            <!-- Email Address Option -->
                             <div class="form-check custom-radio">
                                 <input class="form-check-input" type="radio" name="contactChoice" id="choiceEmail" value="email" style="cursor: pointer;">
                                 <label class="form-check-label" for="choiceEmail" style="cursor: pointer; color: var(--dark);">
@@ -194,7 +236,7 @@
                             <input type="tel" id="ContactPhone" name="ContactNumber" class="search-input" placeholder="Phone Number (e.g., 01xxxxxxxxx)" inputmode="numeric" maxlength="11" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                         </div>
 
-                        <!-- Email Input (Hidden by default) -->
+                        <!-- Email Input (Hidden by default, Visible when chosen) -->
                         <div id="emailInputContainer" class="search-input-group mb-4" style="display: none;">
                             <i class="fa-solid fa-envelope search-icon"></i>
                             <input type="email" id="ContactEmail" name="ContactEmail" class="search-input" placeholder="Email Address (e.g., student@ejust.edu.eg)" />
@@ -205,23 +247,31 @@
                     <button type="submit" class="search-btn w-100">
                         <i class="fa-solid fa-hand-holding-heart me-2"></i> Submit Item Report
                     </button>
+
                 </div>
             </form>
         </div>
+
+        <!-- Divider between reporting section and recent items feed -->
         <div class="form-divider"></div>
 
-        <!-- 4. The Global Live Feed -->
+        <<!-- Recent Items Feed Section -->
         <div class="mb-4">
             <h3 class="mb-4 mt-5 feed-title">Items You Recently Found</h3>
         </div>
 
+        <!-- Check that the user has already reported items -->
         @if (ViewBag.MyItems != null && ViewBag.MyItems.Count > 0)
         {
-            
+            // Display the list of items the user has reported
             <div class="feed-list">
+                <!-- Loop through each item and display its details -->
                 @foreach (var item in ViewBag.MyItems)
                 {
+                    // Convert the UTC reported time to Egypt local time for display
                     var localTime = TimeZoneInfo.ConvertTimeFromUtc(item.DateReported, egyptTimeZone);
+
+                    // Each item is displayed in a card format with image, details, and status dropdown
                     <div class="element-card freeze-hover feed-card-horizontal">
 
                         <!-- Left Side: Image -->
@@ -233,7 +283,7 @@
                             else
                             {
                                 // 1. Figure out which icon to use based on the item type
-                                string iconClass = "fa-box"; // Fallback default
+                                string iconClass = "fa-box";
                                 switch (item)
                                 {
                                     case EjustRecoveryHub.Models.IdItem:
@@ -261,9 +311,10 @@
                         </div>
 
                         <!-- Right Side: Details -->
-                        <div class="item-details">
+                            <div class="item-details">
+
+                            <!-- Display the item type as a title -->
                             <h4 class="mb-1 item-title">
-                                <!-- POLYMORPHIC FIX: Switching on the Object Type -->
                                 @switch (item)
                                 {
                                     case EjustRecoveryHub.Models.IdItem:
@@ -286,8 +337,9 @@
                                         break;
                                 }
                             </h4>
+
+                            <!-- Display the item details based on its type -->
                             <div class="item-description">
-                                <!-- POLYMORPHIC FIX: Using the mapped typed variables (idCard, wallet, etc.) -->
                                 @switch (item)
                                 {
                                     case EjustRecoveryHub.Models.IdItem idCard:
@@ -319,22 +371,30 @@
                                         break;
                                 }
                                 <br />
+
+                                <!-- Display the location where the item was found -->
                                 <strong>Found at:</strong> @item.LocationFound
                             </div>
                         </div>
 
                         <!-- Far Right: Status Dropdown -->
                         <div class="item-actions">
+
+                            <!-- Check if the item is in the list of reported items for this user -->
                             @if (ViewBag.MyReportedIds != null && ((List<int>)ViewBag.MyReportedIds).Contains(item.Id))
                             {
+                                // Determine the color of the status text based on the current status
                                 string statusColor = item.Status == "Returned" ? "var(--secondary)" : "var(--accent)";
 
+                                // Render the form for updating the status of the item
                                 <form method="post" asp-action="UpdateStatus" asp-controller="Items" id="statusForm-@item.Id" class="status-form" style="max-width: 120px;">
+
                                     <!-- Generating Hidden Security Token -->
                                     @Html.AntiForgeryToken()
+
                                     <input type="hidden" name="id" value="@item.Id" />
 
-                                    <!-- Native Auto-Submitting Select -->
+                                    <!-- Auto-Submitting Select -->
                                     <select name="newStatus" class="native-status-select" style="color: @statusColor;" onchange="this.form.submit()">
                                         @if (item.Status == "Returned")
                                         {
@@ -350,8 +410,9 @@
                                 </form>
                             }
 
+                            <!-- Display when the item was reported -->
                             <span class="card-badge badge-found badge-static">
-                                Reported: @localTime.ToString("MMM dd yyyy 'At' hh:mm tt")
+                                Reported On: @localTime.ToString("MMM dd yyyy 'At' hh:mm tt")
                             </span>
                         </div>
                     </div>
@@ -360,6 +421,7 @@
         }
         else
         {
+            // Display a message when no items have been reported recently
             <div class="content-header text-center py-5 empty-state-card">
                 <i class="fa-solid fa-magnifying-glass fa-3x mb-3 empty-state-icon"></i>
                 <p class="mb-0 empty-state-text">No items have been reported recently.</p>
