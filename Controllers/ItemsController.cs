@@ -15,28 +15,31 @@ namespace EjustRecoveryHub.Controllers
 {
     public class ItemsController : Controller
     {
+        // Dependency Injection for Database Context and Data Protection
         private readonly ApplicationDbContext _context;
         private readonly IDataProtector _protector;
 
+        // Constructor to initialize the controller with the database context and data protection provider
         public ItemsController(ApplicationDbContext context, IDataProtectionProvider provider)
         {
             _context = context;
             _protector = provider.CreateProtector("ReportedItemsCookieLock");
         }
 
+        // Get found items from the database, filter by category, and display them in the view
         [HttpGet]
         public async Task<IActionResult> FoundItems(string filter = "recent")
         {
             // 1. Setup Ownership Cookies
             var idList = GetDecryptedCookieIds();
-
-            ViewBag.MyReportedIds = idList;
-            ViewBag.CurrentFilter = filter;
+                // Pass the list of IDs to the view for ownership checks
+                ViewBag.MyReportedIds = idList;
+                ViewBag.CurrentFilter = filter;
 
             // 2. Query ALL Active Items
             var query = _context.Items.Where(i => i.Status == "Active").AsQueryable();
 
-            // 3. Filter by Specific Database Tables instead of a Category string
+            // 3. Filter by Specific Database Tables
             if (!string.IsNullOrEmpty(filter) && filter != "recent" && filter != "active")
             {
                 var f = filter.ToLower();
@@ -57,35 +60,41 @@ namespace EjustRecoveryHub.Controllers
                 query = query.OrderByDescending(i => i.DateReported);
             }
 
+            // To show 10 recent items ignoring ownership
             ViewBag.RecentItems = await query.Take(10).ToListAsync();
 
-            // Separately grab just their items for the "My Reports" section
+            // To show recent items that the user has reported (ownership)
             ViewBag.MyItems = await _context.Items.Where(i => idList.Contains(i.Id)).ToListAsync();
 
             return View();
         }
 
+        // Handle the submission of a found item form including (validation, duplicate checking, photo upload, cookie management)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SubmitFoundItem(ItemViewModel form)
         {
+            // 1. Validate the form data
             if (!ModelState.IsValid)
             {
                 ViewBag.RecentItems = await _context.Items.Where(i => i.Status == "Active").OrderByDescending(i => i.DateReported).Take(10).ToListAsync();
                 return View("FoundItems", form);
             }
 
+            // Initialize variables for the new database item and duplicate check
             ItemModel newDbItem = null;
             bool isDuplicate = false;
             DateTime timeThreshold = DateTime.UtcNow.AddHours(-24);
 
-            // Map the ViewModel form to the strict Relational Database objects
+            // 2. Check for duplicates based on category and relevant fields
             if (!string.IsNullOrEmpty(form.Category))
             {
                 switch (form.Category.ToLower())
                 {
                     case "id":
+                        // Check for duplicates
                         isDuplicate = await _context.IdItems.AnyAsync(i => i.IdNumber == form.IdNumber);
+                        // Create a new ID item to be added to the database
                         newDbItem = new IdItem
                         {
                             Category = "id",
@@ -99,10 +108,12 @@ namespace EjustRecoveryHub.Controllers
                         break;
 
                     case "device":
+                        // Check for duplicates 
                         isDuplicate = await _context.DeviceItems.AnyAsync(i =>
                             i.DateReported >= timeThreshold &&
-                            i.DeviceBrand == form.DeviceBrand &&
-                            i.DeviceModel == form.DeviceModel);
+                            i.DeviceBrand.ToLower() == form.DeviceBrand.Trim().ToLower() &&
+                            i.DeviceModel.ToLower() == form.DeviceModel.Trim().ToLower());
+                        // Create a new Device item to be added to the database
                         newDbItem = new DeviceItem
                         {
                             Category = "device",
@@ -117,10 +128,12 @@ namespace EjustRecoveryHub.Controllers
                         break;
 
                     case "wallet":
+                        // Check for duplicates
                         isDuplicate = await _context.WalletItems.AnyAsync(i =>
                             i.DateReported >= timeThreshold &&
                             i.WalletColor == form.WalletColor &&
                             i.LocationFound == form.LocationFound);
+                        // Create a new Wallet item to be added to the database
                         newDbItem = new WalletItem
                         {
                             Category = "wallet",
@@ -134,10 +147,12 @@ namespace EjustRecoveryHub.Controllers
                         break;
 
                     case "jewelry":
+                        // Check for duplicates
                         isDuplicate = await _context.JewelryItems.AnyAsync(i =>
                             i.DateReported >= timeThreshold &&
                             i.JewelryType == form.JewelryType &&
                             i.LocationFound == form.LocationFound);
+                        // Create a new Jewelry item to be added to the database
                         newDbItem = new JewelryItem
                         {
                             Category = "jewelry",
@@ -151,10 +166,12 @@ namespace EjustRecoveryHub.Controllers
                         break;
 
                     case "notebook":
+                        // Check for duplicates
                         isDuplicate = await _context.NotebookItems.AnyAsync(i =>
                             i.DateReported >= timeThreshold &&
                             i.NotebookColor == form.NotebookColor &&
                             i.LocationFound == form.LocationFound);
+                        // Create a new Notebook item to be added to the database
                         newDbItem = new NotebookItem
                         {
                             Category = "notebook",
@@ -168,6 +185,7 @@ namespace EjustRecoveryHub.Controllers
                 }
             }
 
+            // 3. If duplicate or invalid category, return with error message
             if (isDuplicate || newDbItem == null)
             {
                 TempData["DuplicateMessage"] = "This item has already been reported or the category is invalid.";

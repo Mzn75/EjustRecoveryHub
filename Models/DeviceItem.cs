@@ -9,12 +9,12 @@ namespace EjustRecoveryHub.Models
     public class DeviceItem : ItemModel
     {
         [Required(ErrorMessage = "Brand is required.")]
-        public string DeviceBrand { get; set; }
+        public string? DeviceBrand { get; set; }
 
         [Required]
-        public string DeviceModel { get; set; }
+        public string? DeviceModel { get; set; }
 
         [Required]
-        public string DeviceDescription { get; set; }
+        public string? DeviceDescription { get; set; }
     }
 }

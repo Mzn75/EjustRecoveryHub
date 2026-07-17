@@ -8,9 +8,9 @@ namespace EjustRecoveryHub.Models
     public class IdItem : ItemModel
     {
         [Required]
-        public string IdName { get; set; }
+        public string? IdName { get; set; }
 
         [Required]
-        public string IdNumber { get; set; }
+        public string? IdNumber { get; set; }
     }
 }
