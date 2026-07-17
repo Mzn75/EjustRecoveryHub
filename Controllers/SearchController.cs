@@ -10,13 +10,15 @@ namespace EjustRecoveryHub.Controllers
 {
     public class SearchController : Controller
     {
+        // 1. Inject the database context into the controller
         private readonly ApplicationDbContext _context;
-
+        // Constructor to initialize the controller with the database context
         public SearchController(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        // 2. GET: Search page with optional query and category filter
         [HttpGet]
         public async Task<IActionResult> Index(string query, string categoryFilter = "all")
         {
@@ -26,7 +28,6 @@ namespace EjustRecoveryHub.Controllers
             // 2. TEXT SEARCH: Check if the user typed something into the search bar
             if (!string.IsNullOrEmpty(query))
             {
-                // Removed .ToLower() for better SQL performance
                 itemsQuery = itemsQuery.Where(i => i.LocationFound.Contains(query));
             }
 

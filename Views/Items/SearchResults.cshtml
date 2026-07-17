@@ -1,5 +1,6 @@
 ﻿@{
-    ViewData["Title"] = "Search";
+    ViewData["Title"] = "Search Results";
+    var egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
 }
 
 @model IEnumerable<EjustRecoveryHub.Models.ItemModel>
@@ -18,90 +19,112 @@
 
         @if (Model != null && Model.Any())
         {
-            <div class="elements-grid">
-
+            <div class="feed-list">
                 @foreach (var item in Model)
                 {
-                    <div class="element-card p-4">
-                        <div class="card-content p-0">
+                    var localTime = TimeZoneInfo.ConvertTimeFromUtc(item.DateReported, egyptTimeZone);
 
-                            <div class="d-flex justify-content-between align-items-start mb-4 pb-3 result-card-header">
-                                <h3 class="result-card-title m-0">
+                    <div class="element-card freeze-hover feed-card-horizontal">
 
-                                    <!-- Switch on the Type, not the string -->
-                                    @switch (item)
-                                    {
-                                        case EjustRecoveryHub.Models.IdItem idCard:
-                                            @($"ID : {idCard.IdNumber}")
-                                            break;
-                                        case EjustRecoveryHub.Models.DeviceItem device:
-                                            @($"{device.DeviceBrand} {device.DeviceModel}")
-                                            break;
-                                        case EjustRecoveryHub.Models.WalletItem wallet:
-                                            @($"{wallet.WalletColor} Wallet")
-                                            break;
-                                        case EjustRecoveryHub.Models.JewelryItem jewelry:
-                                            @($"{jewelry.JewelryMaterial} {jewelry.JewelryType}")
-                                            break;
-                                        case EjustRecoveryHub.Models.NotebookItem notebook:
-                                            @($"{notebook.NotebookColor} Notebook")
-                                            break;
-                                        default:
-                                            @:Unknown Item
-                                            break;
-                                    }
-                                </h3>
-                                <span class="card-badge badge-static badge-solid-success">Found</span>
-                            </div>
+                        <!-- Left Side: Image or Fallback Icon -->
+                        <div class="item-thumbnail">
+                            @if (!string.IsNullOrEmpty(item.PhotoPath))
+                            {
+                                <img src="@item.PhotoPath" alt="Item" class="item-thumbnail-img" />
+                            }
+                            else
+                            {
+                                string iconClass = "fa-box";
+                                switch (item)
+                                {
+                                    case EjustRecoveryHub.Models.IdItem: iconClass = "fa-id-card"; break;
+                                    case EjustRecoveryHub.Models.WalletItem: iconClass = "fa-wallet"; break;
+                                    case EjustRecoveryHub.Models.DeviceItem: iconClass = "fa-mobile-screen"; break;
+                                    case EjustRecoveryHub.Models.JewelryItem: iconClass = "fa-ring"; break;
+                                    case EjustRecoveryHub.Models.NotebookItem: iconClass = "fa-book"; break;
+                                }
 
-                            <div class="mb-4">
-                                <p class="result-detail-text mb-3">
-                                    <i class="fa-solid fa-info-circle result-icon icon-accent"></i>
-
-                                    <!-- POLYMORPHIC FIX: Map to the specific casted variables -->
-                                    @switch (item)
-                                    {
-                                        case EjustRecoveryHub.Models.IdItem idCard:
-                                            <strong>Name on ID: </strong>
-                                            @idCard.IdName
-                                            break;
-                                        case EjustRecoveryHub.Models.WalletItem wallet:
-                                            <strong>Description:</strong>
-                                            @wallet.WalletColor @wallet.WalletBrandOrMaterial
-                                            break;
-                                        case EjustRecoveryHub.Models.DeviceItem device:
-                                            <strong>Description:</strong>
-                                            @device.DeviceDescription
-                                            break;
-                                        case EjustRecoveryHub.Models.JewelryItem jewelry:
-                                            <strong>Description:</strong>
-                                            @jewelry.JewelryMaterial @jewelry.JewelryType
-                                            break;
-                                        case EjustRecoveryHub.Models.NotebookItem notebook:
-                                            <strong>Color:</strong>
-                                            @notebook.NotebookColor
-                                            break;
-                                        default:
-                                            @:Other
-                                            break;
-                                    }
-                                </p>
-                                <p class="result-detail-text mb-3">
-                                    <i class="fa-solid fa-location-dot result-icon icon-secondary"></i>
-                                    <strong>Found at: </strong> @item.LocationFound
-                                </p>
-                            </div>
-
-                            <div class="card-actions">
-                                <a asp-controller="Items" asp-action="Details" asp-route-id="@item.PublicId" class="search-btn w-100 d-block text-center text-decoration-none">
-                                    <i class="fa-solid fa-eye me-2"></i> View Details
-                                </a>
-                            </div>
-
+                                <div class="d-flex align-items-center justify-content-center item-thumbnail-fallback">
+                                    <i class="fa-solid @iconClass fa-2x" style="color: var(--secondary);"></i>
+                                </div>
+                            }
                         </div>
+
+                        <!-- Middle: Details -->
+                        <div class="item-details">
+                            <h4 class="mb-1 item-title">
+                                @switch (item)
+                                {
+                                    case EjustRecoveryHub.Models.IdItem idCard:
+                                        @($"ID: {idCard.IdNumber}")
+                                        break;
+                                    case EjustRecoveryHub.Models.DeviceItem device:
+                                        @($"{device.DeviceBrand} {device.DeviceModel}")
+                                        break;
+                                    case EjustRecoveryHub.Models.WalletItem wallet:
+                                        @($"{wallet.WalletColor} Wallet")
+                                        break;
+                                    case EjustRecoveryHub.Models.JewelryItem jewelry:
+                                        @($"{jewelry.JewelryMaterial} {jewelry.JewelryType}")
+                                        break;
+                                    case EjustRecoveryHub.Models.NotebookItem notebook:
+                                        @($"{notebook.NotebookColor} Notebook")
+                                        break;
+                                    default:
+                                        @:Unknown Item
+                                        break;
+                                }
+                            </h4>
+
+                            <div class="item-description">
+                                @switch (item)
+                                {
+                                    case EjustRecoveryHub.Models.IdItem idCard:
+                                        <strong>Name on ID: </strong> 
+                                        @idCard.IdName
+                                        break;
+                                    case EjustRecoveryHub.Models.WalletItem wallet:
+                                        <strong>Description:</strong> 
+                                        @wallet.WalletColor @wallet.WalletBrandOrMaterial
+                                        break;
+                                    case EjustRecoveryHub.Models.DeviceItem device:
+                                        <strong>Description:</strong> 
+                                        @device.DeviceDescription
+                                        break;
+                                    case EjustRecoveryHub.Models.JewelryItem jewelry:
+                                        <strong>Description:</strong> 
+                                        @jewelry.JewelryMaterial @jewelry.JewelryType
+                                        break;
+                                    case EjustRecoveryHub.Models.NotebookItem notebook:
+                                        <strong>Color:</strong> 
+                                        @notebook.NotebookColor
+                                        break;
+                                    default:
+                                        @:Other
+                                        break;
+                                }
+                                <br />
+                                <strong>Found at:</strong> @item.LocationFound
+                            </div>
+                        </div>
+
+                        <!-- Far Right: Actions (Stacked naturally by your CSS) -->
+                        <div class="item-actions">
+
+                            
+                            <!-- 3. Date Pill -->
+                            <span class="card-badge badge-found badge-static">
+                                Found on: @localTime.ToString("MMM dd yyyy 'at' hh:mm tt")
+                            </span>
+
+                            <!-- 2. View Details Button (Removed the w-100 so it matches the image sizing) -->
+                            <a asp-controller="Items" asp-action="Details" asp-route-id="@item.PublicId" class="btn-primary">
+                                <i class="fa-solid fa-eye me-2"></i> View Details
+                            </a>
+                        </div>
+
                     </div>
                 }
-
             </div>
         }
         else

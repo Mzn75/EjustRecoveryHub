@@ -115,7 +115,8 @@ namespace EjustRecoveryHub.Controllers
                             i.DateReported >= timeThreshold &&
                             i.DeviceBrand.ToLower() == form.DeviceBrand.Trim().ToLower() &&
                             i.DeviceModel.ToLower() == form.DeviceModel.Trim().ToLower() &&
-                            i.LocationFound.ToLower() == form.LocationFound.Trim().ToLower() );
+                            i.LocationFound.ToLower() == form.LocationFound.Trim().ToLower() &&
+                            i.DeviceDescription.ToLower() == form.DeviceDescription.Trim().ToLower() );
                         // Create a new Device item to be added to the database
                         newDbItem = new DeviceItem
                         {
