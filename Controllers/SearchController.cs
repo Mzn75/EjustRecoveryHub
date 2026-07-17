@@ -18,20 +18,20 @@ namespace EjustRecoveryHub.Controllers
             _context = context;
         }
 
-        // 2. GET: Search page with optional query and category filter
+        // 2. Search page with optional query and category filter
         [HttpGet]
         public async Task<IActionResult> Index(string query, string categoryFilter = "all")
         {
-            // 1. BASE QUERY: Only search for items that are still "Active"
+            // 1. Base Query: Only search for items that are still "Active"
             var itemsQuery = _context.Items.Where(i => i.Status == "Active").AsQueryable();
 
-            // 2. TEXT SEARCH: Check if the user typed something into the search bar
+            // 2. Text Search: Check if the user typed something into the search bar
             if (!string.IsNullOrEmpty(query))
             {
                 itemsQuery = itemsQuery.Where(i => i.LocationFound.Contains(query));
             }
 
-            // 3. CATEGORY FILTER: Use polymorphic type filtering instead of strings
+            // 3. Category Filter
             if (!string.IsNullOrEmpty(categoryFilter) && categoryFilter.ToLower() != "all")
             {
                 var f = categoryFilter.ToLower();
@@ -43,19 +43,20 @@ namespace EjustRecoveryHub.Controllers
                 else if (f == "notebook") itemsQuery = itemsQuery.OfType<NotebookItem>();
             }
 
-            // 4. EXECUTE ASYNC: Sort by newest and fetch from the database
+            // 4. Sort by newest and fetch from the database async.
             var searchResults = await itemsQuery
                 .OrderByDescending(i => i.DateReported)
                 .ToListAsync();
 
-            // Pass the search text back to the view so the search bar doesn't clear out
+            // 5. Pass the search text back to the view so the search bar doesn't clear out
             ViewBag.CurrentQuery = query;
             ViewBag.CurrentCategory = categoryFilter;
 
-            // FIX: Actually hand the results to the HTML view!
+            // 6. Return the results to the view
             return View(searchResults);
         }
 
+        // 3. Search Lost Items 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Search(ItemViewModel searchData)
@@ -73,10 +74,9 @@ namespace EjustRecoveryHub.Controllers
             switch (searchData.Category.ToLower())
             {
                 case "id":
-
-                    // Filter down into the specific IdItems table
+                    // Filter for ID items
                     var idQuery = query.OfType<IdItem>();
-
+                    // Apply filters based on the searchData properties
                     if (!string.IsNullOrEmpty(searchData.IdNumber))
                     {
                         idQuery = idQuery.Where(item => item.IdNumber == searchData.IdNumber);
@@ -85,13 +85,14 @@ namespace EjustRecoveryHub.Controllers
                     {
                         idQuery = idQuery.Where(item => item.IdName.Contains(searchData.IdName));
                     }
-                    // Cast back to the base query so we can execute it later
+                    // Cast back to the base ItemModel type for further processing
                     query = idQuery.Cast<ItemModel>();
                     break;
 
                 case "device":
+                    // Filter for Device items
                     var deviceQuery = query.OfType<DeviceItem>();
-
+                    // Apply filters based on the searchData properties
                     if (!string.IsNullOrEmpty(searchData.DeviceBrand))
                     {
                         deviceQuery = deviceQuery.Where(item => item.DeviceBrand.Contains(searchData.DeviceBrand));
@@ -108,8 +109,9 @@ namespace EjustRecoveryHub.Controllers
                     break;
 
                 case "wallet":
+                    // Filter for Wallet items
                     var walletQuery = query.OfType<WalletItem>();
-
+                    // Apply filters based on the searchData properties
                     if (!string.IsNullOrEmpty(searchData.WalletColor))
                     {
                         walletQuery = walletQuery.Where(item => item.WalletColor.Contains(searchData.WalletColor));
@@ -122,8 +124,9 @@ namespace EjustRecoveryHub.Controllers
                     break;
 
                 case "jewelry":
+                    // Filter for Jewelry items
                     var jewelryQuery = query.OfType<JewelryItem>();
-
+                    // Apply filters based on the searchData properties
                     if (!string.IsNullOrEmpty(searchData.JewelryType))
                     {
                         jewelryQuery = jewelryQuery.Where(item => item.JewelryType.Contains(searchData.JewelryType));
@@ -136,8 +139,9 @@ namespace EjustRecoveryHub.Controllers
                     break;
 
                 case "notebook":
+                    // Filter for Notebook items
                     var notebookQuery = query.OfType<NotebookItem>();
-
+                    // Apply filters based on the searchData properties
                     if (!string.IsNullOrEmpty(searchData.NotebookColor))
                     {
                         notebookQuery = notebookQuery.Where(item => item.NotebookColor.Contains(searchData.NotebookColor));
@@ -146,11 +150,12 @@ namespace EjustRecoveryHub.Controllers
                     break;
             }
 
-            // 4. Execute and Return ASYNCHRONOUSLY 
+            // 4. Execute and Return results async.
             var finalResults = await query
                 .OrderByDescending(i => i.DateReported)
                 .ToListAsync();
 
+            // 5. Return the results to the SearchResults view
             return View("~/Views/Items/SearchResults.cshtml", finalResults);
         }
     }
