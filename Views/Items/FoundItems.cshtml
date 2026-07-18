@@ -36,10 +36,10 @@
             <!-- The Form for Reporting Found Items -->
             <form id="reportItemForm" asp-controller="Items" asp-action="SubmitFoundItem" method="post" enctype="multipart/form-data" class="custom-search-form form-stacked">
 
-                <!-- Generating Hidden Security Token -->
+                @* Anti-forgery token for security *@
                 @Html.AntiForgeryToken()
 
-                <!-- Custom Dropdown List -->
+                <!-- Item Category DropDownList -->
                 <div class="custom-dropdown-wrapper mb-4">
 
                     <!-- Hidden native select for the actual form submission -->
@@ -132,7 +132,7 @@
                         <!-- Device Description Input -->
                         <div class="search-input-group mb-3">
                             <i class="fa-solid fa-align-left search-icon"></i>
-                            <input type="text" name="DeviceDescription" class="search-input dynamic-input" placeholder="Description (e.g., Cover Shape, Wallpaper)" />
+                            <input type="text" name="DeviceDescription" class="search-input dynamic-input" placeholder="Description (e.g., Cover Shape, Wallpaper, Color)" />
                         </div>
 
                     </div>
@@ -260,12 +260,12 @@
             <h3 class="mb-4 mt-5 feed-title">Items You Recently Found</h3>
         </div>
 
-        <!-- Check that the user has already reported items -->
+        @* Check that the user has already reported items *@
         @if (ViewBag.MyItems != null && ViewBag.MyItems.Count > 0)
         {
             // Display the list of items the user has reported
             <div class="feed-list">
-                <!-- Loop through each item and display its details -->
+                @* Loop through each item and display its details *@
                 @foreach (var item in ViewBag.MyItems)
                 {
                     // Convert the UTC reported time to Egypt local time for display
@@ -303,7 +303,7 @@
                                         break;
                                 }
 
-                                <!-- 2. Render the specific icon -->
+                                <!-- Render the specific icon -->
                                 <div class="d-flex align-items-center justify-content-center item-thumbnail-fallback">
                                     <i class="fa-solid @iconClass fa-2x" style="color: var(--secondary);"></i>
                                 </div>

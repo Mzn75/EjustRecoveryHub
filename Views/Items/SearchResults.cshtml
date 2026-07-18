@@ -1,39 +1,53 @@
-﻿@{
+﻿@model IEnumerable<EjustRecoveryHub.Models.ItemModel>
+@{
     ViewData["Title"] = "Search Results";
+    // Get the Egypt Standard Time zone
     var egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
 }
 
-@model IEnumerable<EjustRecoveryHub.Models.ItemModel>
 
 <!-- Mobile Menu Button -->
 <button class="mobile-menu-btn d-lg-none">
     <i class="fas fa-bars"></i>
 </button>
 
+<!-- Main Content -->
 <div class="glass-container">
+
     <main class="main-content">
+
+        <!-- The Header Section -->
         <div class="content-header welcome-section mb-4">
             <h2>Search Results</h2>
             <p>Here is what we found matching your search.</p>
         </div>
 
+        @* Verify the database returned any items *@
         @if (Model != null && Model.Any())
         {
+            
             <div class="feed-list">
+
+                @* Loop through every single item returned ny the search *@
                 @foreach (var item in Model)
                 {
+
+                    @* Convert UTC to Egyptian Local Time *@
                     var localTime = TimeZoneInfo.ConvertTimeFromUtc(item.DateReported, egyptTimeZone);
 
                     <div class="element-card freeze-hover feed-card-horizontal">
 
                         <!-- Left Side: Image or Fallback Icon -->
                         <div class="item-thumbnail">
+
                             @if (!string.IsNullOrEmpty(item.PhotoPath))
                             {
+                                @* If user uploaded a photo, display it *@
                                 <img src="@item.PhotoPath" alt="Item" class="item-thumbnail-img" />
                             }
                             else
                             {
+                                @* If user didn't upload a photo, display a box icon then check the item type and display an icon based on the type *@
                                 string iconClass = "fa-box";
                                 switch (item)
                                 {
@@ -44,6 +58,7 @@
                                     case EjustRecoveryHub.Models.NotebookItem: iconClass = "fa-book"; break;
                                 }
 
+                                <!-- Display the fallback icon -->
                                 <div class="d-flex align-items-center justify-content-center item-thumbnail-fallback">
                                     <i class="fa-solid @iconClass fa-2x" style="color: var(--secondary);"></i>
                                 </div>
@@ -52,6 +67,8 @@
 
                         <!-- Middle: Details -->
                         <div class="item-details">
+
+                            <!-- Show The Title from item's data -->
                             <h4 class="mb-1 item-title">
                                 @switch (item)
                                 {
@@ -76,7 +93,9 @@
                                 }
                             </h4>
 
+                            <!-- Item Description, Print out the specific details depending on the item type -->
                             <div class="item-description">
+
                                 @switch (item)
                                 {
                                     case EjustRecoveryHub.Models.IdItem idCard:
@@ -104,20 +123,21 @@
                                         break;
                                 }
                                 <br />
+
+                                <!-- Location Found at -->
                                 <strong>Found at:</strong> @item.LocationFound
                             </div>
                         </div>
 
-                        <!-- Far Right: Actions (Stacked naturally by your CSS) -->
+                        <!-- Far Right: Actions -->
                         <div class="item-actions">
-
-                            
-                            <!-- 3. Date Pill -->
+                         
+                            <!-- When the item was found -->
                             <span class="card-badge badge-found badge-static">
                                 Found on: @localTime.ToString("MMM dd yyyy 'at' hh:mm tt")
                             </span>
 
-                            <!-- 2. View Details Button (Removed the w-100 so it matches the image sizing) -->
+                            <!-- Navigate to Details Page-->
                             <a asp-controller="Items" asp-action="Details" asp-route-id="@item.PublicId" class="btn-primary">
                                 <i class="fa-solid fa-eye me-2"></i> View Details
                             </a>
@@ -129,6 +149,7 @@
         }
         else
         {
+            <!-- No Results Case -->
             <div class="empty-state text-center form-stacked empty-state-large d-flex flex-column align-items-center">
                 <i class="fa-solid fa-box-open mb-4 empty-state-icon-large"></i>
 
@@ -140,6 +161,7 @@
                     We couldn't find any lost items matching those specific details in the campus database right now.
                 </p>
 
+                <!-- Navigate to Search Lost Items Page -->
                 <a asp-controller="Items" asp-action="LostItems" class="btn-primary d-inline-block px-5 py-3">
                     <i class="fa-solid fa-magnifying-glass me-2"></i> Try Another Search
                 </a>
