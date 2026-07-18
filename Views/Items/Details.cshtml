@@ -3,33 +3,48 @@
 @{
     ViewData["Title"] = "Item Details";
 
+    // Convert the UTC DateReported to Egypt Standard Time
     var egyptTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Egypt Standard Time");
     var localTime = TimeZoneInfo.ConvertTimeFromUtc(Model.DateReported, egyptTimeZone);
 }
 
-<head>
-    <title>Item Details</title>
-</head>
-
+<!-- Main Content -->
 <div class="glass-container details-wrapper d-flex align-items-center justify-content-center">
     <main class="main-content details-main">
 
-        <a asp-controller="Items" asp-action="LostItems" class="back-link mb-4">
-            <i class="fa-solid fa-arrow-left me-2"></i> Back to Search
+        <!-- Navigate Back to Search Lost -->
+        <a href="javascript:history.back()" class="back-link mb-4">
+            <i class="fa-solid fa-arrow-left me-2"></i> Back to Search Results
         </a>
 
+        <!-- Display the Item Details -->
         <div class="custom-search-form form-stacked details-card-custom">
 
+            <!-- Item Photo Section -->
             <div class="details-image-wrapper d-flex align-items-center justify-content-center">
+                @* Check if the item photo exists *@
                 @if (!string.IsNullOrEmpty(Model.PhotoPath))
                 {
+                    @* If there is a photo, display it *@
                     <img src="@Model.PhotoPath" alt="Item Photo" class="details-image" />
                 }
                 else
                 {
+                    @* If user didn't upload a photo, set default as a box icon then check the item type and display an icon based on the type *@                
+                    string iconClass = "fa-box";
+                    switch (Model)
+                    {
+                        case EjustRecoveryHub.Models.IdItem: iconClass = "fa-id-card"; break;
+                        case EjustRecoveryHub.Models.WalletItem: iconClass = "fa-wallet"; break;
+                        case EjustRecoveryHub.Models.DeviceItem: iconClass = "fa-mobile-screen"; break;
+                        case EjustRecoveryHub.Models.JewelryItem: iconClass = "fa-ring"; break;
+                        case EjustRecoveryHub.Models.NotebookItem: iconClass = "fa-book"; break;
+                    }
+
+                    <!-- Display the fallback icon -->
                     <div class="details-no-image text-center">
-                        <i class="fa-solid fa-image details-no-image-icon mb-3"></i>
-                        <p>No Photo Provided</p>
+                        <i class="fa-solid @iconClass fa-2x mb-3" style="color: var(--secondary);"></i>
+                        <p style="color: var(--secondary);">No Photo Provided</p>
                     </div>
                 }
             </div>
@@ -38,10 +53,14 @@
 
                 <div class="d-flex align-items-center justify-content-between flex-wrap gap-4 mb-4">
                     <div>
+
+                        <!-- Display Item's ID -->
                         <span class="card-badge badge-solid-primary mb-2 d-inline-block">Found Item #@Model.Id</span>
+
+                        <!-- Display Item Title from its data -->
                         <h2 class="details-title m-0">
 
-                            <!-- Switch on Type to access specific properties -->
+                            @* Set Title based on item type *@
                             @switch (Model)
                             {
                                 case EjustRecoveryHub.Models.IdItem idCard:
@@ -66,15 +85,19 @@
                         </h2>
                     </div>
 
+                    <!-- Display When the Item was found -->
                     <div class="card-badge badge-solid-primary position-static m-0 d-inline-block" style="transform: none;">
                         <span style="font-size: 0.9rem; font-weight: 500;">
                             <i class="fa-regular fa-clock me-1"></i> @localTime.ToString("dd MMM yyyy, hh:mm tt")
                         </span>
                     </div>
+
                 </div>
 
+                <!-- Display Other Details -->
                 <div class="dynamic-group d-block mb-4">
 
+                    <!-- Where the item was found -->
                     <div class="search-input-group info-group-glass mb-3">
                         <i class="fa-solid fa-location-dot search-icon icon-secondary"></i>
                         <div class="info-content">
@@ -83,6 +106,7 @@
                         </div>
                     </div>
 
+                    <!-- Where is the item now -->
                     <div class="search-input-group info-group-glass mb-3">
                         <i class="fa-solid fa-building-shield search-icon icon-primary"></i>
                         <div class="info-content">
@@ -93,76 +117,78 @@
 
                 </div>
 
+                <!-- Contact Section -->
                 <div class="contact-action-box p-4 text-center">
+                    <!-- title -->
                     <h4 class="contact-action-title mb-2">Is this yours?</h4>
                     <p class="contact-action-desc mb-4">Contact the finder directly to arrange a safe return.</p>
 
+                    @* Anti-forgery token for security *@
                     @Html.AntiForgeryToken()
 
-                    <!-- The trigger button -->
+                    <!-- Reveal Contact Info -->
                     <button type="button" id="revealContactBtn" class="btn-primary w-100 mt-4 d-block btn-reveal">
                         <i class="fa-solid fa-eye me-2"></i> Reveal Contact Info
                     </button>
 
+                    <!-- Script to reveal the info -->
                     <script>
-                                            document.addEventListener('DOMContentLoaded', function () {
-                                                var revealBtn = document.getElementById('revealContactBtn');
+                        document.addEventListener('DOMContentLoaded', function () {
+                            var revealBtn = document.getElementById('revealContactBtn');
 
-                                                if (revealBtn) {
-                                                    revealBtn.addEventListener('click', function () {
+                            if (revealBtn) {
+                                revealBtn.addEventListener('click', function () {
 
-                                                        var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                                var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
-                                                        // 1. Show a loading state
-                                                        var originalText = revealBtn.innerHTML;
-                                                        revealBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Loading...';
-                                                        revealBtn.disabled = true;
+                                // 1. Show a loading state
+                                var originalText = revealBtn.innerHTML;
+                                revealBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Loading...';
+                                revealBtn.disabled = true;
 
-                                                        // 2. Fetch the data securely
-                                                        fetch('@Url.Action("RevealContact", "Items")', {
-                                                            method: 'POST',
-                                                            headers: {
-                                                                'Content-Type': 'application/x-www-form-urlencoded',
-                                                                'RequestVerificationToken': token
-                                                            },
-                                                            body: 'id=' + @Model.Id
-                                                        })
-                                                        .then(response => response.json())
-                                                        .then(data => {
-                                                            // Restore the button
-                                                            revealBtn.innerHTML = originalText;
-                                                            revealBtn.disabled = false;
+                                // 2. Fetch the data securely
+                                fetch('@Url.Action("RevealContact", "Items")', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/x-www-form-urlencoded', 'RequestVerificationToken': token
+                                    },
+                                    body: 'id=' + @Model.Id
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // Restore the button
+                                    revealBtn.innerHTML = originalText;
+                                    revealBtn.disabled = false;
 
-                                                            if (data.success) {
+                                    if (data.success) {
+                                        // 3. Start building the HTML
+                                        var contactButtonsHtml = `
+                                                <p class="text-muted mb-4" style="font-size: 0.95rem;">
+                                                    Please be respectful when contacting the finder.
+                                                </p>
+                                                    <div class="d-flex flex-column gap-3">
+                                        `;
 
-                                                                // 3. Start building the HTML
-                                                                var contactButtonsHtml = `
-                                                                    <p class="text-muted mb-4" style="font-size: 0.95rem;">
-                                                                        Please be respectful when contacting the finder.
-                                                                    </p>
-                                                                    <div class="d-flex flex-column gap-3">
-                                                                `;
+                                        // Add Phone & WhatsApp buttons ONLY if a phone number exists
+                                        if (data.phone) {
+                                            var phone = data.phone;
+                                            var waNumber = "+20" + phone.replace(/^0+/, '');
 
-                                                                // Add Phone & WhatsApp buttons ONLY if a phone number exists
-                                                                if (data.phone) {
-                                                                    var phone = data.phone;
-                                                                    var waNumber = "+20" + phone.replace(/^0+/, '');
+                                            contactButtonsHtml += `
+                                                <a href="tel:${phone}" class="search-btn w-100 text-white btn-contact-call d-block">
+                                                    <i class="fa-solid fa-phone me-2"></i> Call ${phone}
+                                                </a>
+                                                <a href="https://wa.me/${waNumber}" target="_blank" class="search-btn w-100 text-white btn-contact-wa d-block">
+                                                    <i class="fa-brands fa-whatsapp me-2"></i> WhatsApp
+                                                </a>
+                                            `;
+                                        }
 
-                                                                    contactButtonsHtml += `
-                                                                        <a href="tel:${phone}" class="search-btn w-100 text-white btn-contact-call d-block">
-                                                                            <i class="fa-solid fa-phone me-2"></i> Call ${phone}
-                                                                        </a>
-                                                                        <a href="https://wa.me/${waNumber}" target="_blank" class="search-btn w-100 text-white btn-contact-wa d-block">
-                                                                            <i class="fa-brands fa-whatsapp me-2"></i> WhatsApp
-                                                                        </a>
-                                                                    `;
-                                                                }
+                                        // Add Email button ONLY if an email exists
+                                        if (data.email) {
+                                            var email = data.email;
 
-                                                                // Add Email button ONLY if an email exists
-                                                                if (data.email) {
-                                                                    var email = data.email;
-
-                                                                                                            // Create a pre-filled subject line (URL encoded so spaces don't break the link)
+                                            // Create a pre-filled subject line (URL encoded so spaces don't break the link)
                                             var subject = encodeURIComponent("Regarding your found item on E-JUST Recovery Hub");
 
                                             // The secret Gmail compose URL
@@ -173,49 +199,51 @@
                                                     <i class="fa-brands fa-google me-2"></i> Email via Gmail
                                                 </a>
                                             `;
-                                                                }
+                                        }
 
-                                                                // Close the div container
-                                                                contactButtonsHtml += `</div>`;
+                                        // Close the div container
+                                        contactButtonsHtml += `</div>`;
 
-                                                                // 4. Fire the SweetAlert2 popup
-                                                                Swal.fire({
-                                                                    title: 'Contact Details',
-                                                                    icon: 'info',
-                                                                    html: contactButtonsHtml,
-                                                                    showConfirmButton: false,
-                                                                    showCloseButton: true,
-                                                                    buttonsStyling: false,
-                                                                    customClass: {
-                                                                        popup: 'swal-glass-popup',
-                                                                        title: 'swal-glass-title',
-                                                                        htmlContainer: 'swal-glass-text',
-                                                                        closeButton: 'swal-glass-close'
-                                                                    }
-                                                                });
-                                                            } else {
-                                                                // Handle failure
-                                                                Swal.fire({
-                                                                    title: 'Error',
-                                                                    text: data.message,
-                                                                    icon: 'error',
-                                                                    customClass: { popup: 'swal-glass-popup' }
-                                                                });
-                                                            }
-                                                        })
-                                                        .catch(error => {
-                                                            revealBtn.innerHTML = originalText;
-                                                            revealBtn.disabled = false;
-                                                            Swal.fire({
-                                                                title: 'Connection Error',
-                                                                text: 'Could not load contact info securely. Please check your network.',
-                                                                icon: 'error',
-                                                                customClass: { popup: 'swal-glass-popup' }
-                                                            });
-                                                        });
-                                                    });
-                                                }
-                                            });
+                                        // 4. Fire the SweetAlert2 popup
+                                        Swal.fire({
+                                            title: 'Contact Details',
+                                            icon: 'info',
+                                            html: contactButtonsHtml,
+                                            showConfirmButton: false,
+                                            showCloseButton: true,
+                                            buttonsStyling: false,
+                                            customClass: {
+                                                popup: 'swal-glass-popup',
+                                                title: 'swal-glass-title',
+                                                htmlContainer: 'swal-glass-text',
+                                                closeButton: 'swal-glass-close'
+                                            }
+                                        });
+
+                                } else {
+                                    // Handle failure
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: data.message,
+                                        icon: 'error',
+                                        customClass: { popup: 'swal-glass-popup' }
+                                    });
+                                }
+
+                            })
+                        .catch(error => {
+                            revealBtn.innerHTML = originalText;
+                            revealBtn.disabled = false;
+                            Swal.fire({
+                                title: 'Connection Error',
+                                text: 'Could not load contact info securely. Please check your network.',
+                                icon: 'error',
+                                customClass: { popup: 'swal-glass-popup' }
+                            });
+                        });
+                        });
+                         }
+                        });
                     </script>
                 </div>
             </div>
