@@ -1,9 +1,16 @@
-﻿/* ==========================================================================
+﻿.responsive-scroll {
+    overflow: hidden !important; /* Locks scroll on large screens (Laptops/PCs) */
+}
+/* ==========================================================================
    RESPONSIVE DESIGN (MEDIA QUERIES)
    ========================================================================== */
 
 /* Tablets and Medium Screens */
 @media (max-width: 1024px) {
+    .responsive-scroll {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
     .sidebar {
         width: 250px;
     }
