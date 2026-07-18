@@ -17,7 +17,8 @@
     <main class="main-content">
 
         <!-- The Header Section -->
-        <div class="content-header welcome-section mb-4">
+       <div class="content-header welcome-header-card bg-white rounded shadow-sm p-5 text-center position-relative mb-4">
+            <i class="fa-solid fa-magnifying-glass faded-watermark-icon"></i>
             <h2>Search Results</h2>
             <p>Here is what we found matching your search.</p>
         </div>
@@ -133,8 +134,8 @@
                         <div class="item-actions">
                          
                             <!-- When the item was found -->
-                            <span class="card-badge badge-found badge-static">
-                                Found on: @localTime.ToString("MMM dd yyyy 'at' hh:mm tt")
+                            <span class="card-badge badge-found badge-static text-center" style="align-self: stretch; max-width: none !important; display: flex; align-items: center; justify-content: center;">
+                                Found on: <br/> @localTime.ToString("MMM dd yyyy 'at' hh:mm tt")
                             </span>
 
                             <!-- Navigate to Details Page-->
