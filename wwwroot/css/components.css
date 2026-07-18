@@ -36,6 +36,19 @@
     margin: 0 auto;
 }
 
+.faded-watermark-icon {
+    position: absolute;
+    top: 40%;
+    left: 10%;
+    transform: translateY(-50%); /* Keeps it perfectly centered vertically */
+    font-size: 18rem;
+    color: #000000; /* Set to pure black for a darker shadow */
+    opacity: 0.12; /* Increased from 0.04 to make it stand out much more */
+    z-index: 0;
+    pointer-events: none;
+    user-select: none;
+}
+
 /* ==========================================================================
    SEARCH BAR COMPONENTS
    ========================================================================== */
