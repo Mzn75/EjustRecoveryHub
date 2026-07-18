@@ -9,11 +9,13 @@
 }
 
 <!-- Main Content -->
-<div class="glass-container details-wrapper min-vh-100 py-5">
+<div class="glass-container details-wrapper min-vh-100 d-flex flex-column justify-content-center align-items-center py-5">
     <main class="main-content details-main">
 
         <!-- Display the Item Details -->
         <div class="custom-search-form form-stacked details-card-custom">
+
+            <div style="height: 5px; width: 100%; background: linear-gradient(90deg, var(--secondary), var(--accent), var(--success));"></div>
 
             <!-- Item Photo Section -->
             <div class="details-image-wrapper d-flex align-items-center justify-content-center position-relative mb-4">
@@ -41,13 +43,14 @@
                         <i class="fa-solid @iconClass fa-2x mb-3" style="color: var(--secondary);"></i>
                         <p style="color: var(--secondary);">No Photo Provided</p>
                     </div>
-
-                    <!-- Navigate Back to Search Lost -->
-                    <a href="javascript:history.back()" class="details-back-circle" title="Back to Search Results">
-                        <i class="fa-solid fa-arrow-left me-2"></i> Back
-                    </a>
-
+              
                 }
+
+                <!-- Navigate Back to Search Lost -->
+                <a href="javascript:history.back()" class="details-back-circle" title="Back to Search Results">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Back
+                </a>
+
             </div>
 
             <div class="details-body">
