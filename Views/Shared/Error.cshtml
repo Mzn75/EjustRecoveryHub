@@ -6,9 +6,11 @@
 <div class="glass-container">
     <main class="main-content">
         <div class="content-header welcome-section" style="padding: 5rem 2rem; margin-top: 10vh;">
+            <!-- Title -->
             <h1 style="font-size: 5rem; color: var(--secondary);">System Crash</h1>
             <h2>Whoops, something went wrong on our end.</h2>
 
+            <!-- Error ID -->
             @if (Model.ShowRequestId)
             {
                 <p class="mb-4" style="color: #7f8c8d;">
@@ -16,6 +18,7 @@
                 </p>
             }
 
+            <!-- Navigate to the Dashboard -->
             <a asp-controller="Home" asp-action="Index" class="btn-primary">Return to Dashboard</a>
         </div>
     </main>
