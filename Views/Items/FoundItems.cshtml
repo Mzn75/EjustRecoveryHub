@@ -1,4 +1,4 @@
-﻿@model EjustRecoveryHub.Models.ItemViewModel
+﻿@model EjustLostAndFoundHub.Models.ItemViewModel
 @{
     ViewData["Title"] = "Report Found Items";
 
@@ -287,19 +287,19 @@
                                 string iconClass = "fa-box";
                                 switch (item)
                                 {
-                                    case EjustRecoveryHub.Models.IdItem:
+                                    case EjustLostAndFoundHub.Models.IdItem:
                                         iconClass = "fa-id-card";
                                         break;
-                                    case EjustRecoveryHub.Models.WalletItem:
+                                    case EjustLostAndFoundHub.Models.WalletItem:
                                         iconClass = "fa-wallet";
                                         break;
-                                    case EjustRecoveryHub.Models.DeviceItem:
+                                    case EjustLostAndFoundHub.Models.DeviceItem:
                                         iconClass = "fa-mobile-screen";
                                         break;
-                                    case EjustRecoveryHub.Models.JewelryItem:
+                                    case EjustLostAndFoundHub.Models.JewelryItem:
                                         iconClass = "fa-ring";
                                         break;
-                                    case EjustRecoveryHub.Models.NotebookItem:
+                                    case EjustLostAndFoundHub.Models.NotebookItem:
                                         iconClass = "fa-book";
                                         break;
                                 }
@@ -318,19 +318,19 @@
                             <h4 class="mb-1 item-title">
                                 @switch (item)
                                 {
-                                    case EjustRecoveryHub.Models.IdItem:
+                                    case EjustLostAndFoundHub.Models.IdItem:
                                         @:ID Card
                                         break;
-                                    case EjustRecoveryHub.Models.WalletItem:
+                                    case EjustLostAndFoundHub.Models.WalletItem:
                                         @:Wallet
                                         break;
-                                    case EjustRecoveryHub.Models.DeviceItem:
+                                    case EjustLostAndFoundHub.Models.DeviceItem:
                                         @:Device
                                         break;
-                                    case EjustRecoveryHub.Models.JewelryItem:
+                                    case EjustLostAndFoundHub.Models.JewelryItem:
                                         @:Jewelry
                                         break;
-                                    case EjustRecoveryHub.Models.NotebookItem:
+                                    case EjustLostAndFoundHub.Models.NotebookItem:
                                         @:Notebook
                                         break;
                                     default:
@@ -343,27 +343,27 @@
                             <div class="item-description">
                                 @switch (item)
                                 {
-                                    case EjustRecoveryHub.Models.IdItem idCard:
+                                    case EjustLostAndFoundHub.Models.IdItem idCard:
                                         <strong>Name & ID:</strong>
                                         @idCard.IdName
                                         @:/ @idCard.IdNumber
                                         break;
-                                    case EjustRecoveryHub.Models.WalletItem wallet:
+                                    case EjustLostAndFoundHub.Models.WalletItem wallet:
                                         <strong>Description:</strong>
                                         @wallet.WalletColor
                                         @: @wallet.WalletBrandOrMaterial
                                         break;
-                                    case EjustRecoveryHub.Models.DeviceItem device:
+                                    case EjustLostAndFoundHub.Models.DeviceItem device:
                                         <strong>Brand & Model:</strong>
                                         @device.DeviceBrand
                                         @: @device.DeviceModel
                                         break;
-                                    case EjustRecoveryHub.Models.JewelryItem jewelry:
+                                    case EjustLostAndFoundHub.Models.JewelryItem jewelry:
                                         <strong>Description:</strong>
                                         @jewelry.JewelryMaterial
                                         @: @jewelry.JewelryType
                                         break;
-                                    case EjustRecoveryHub.Models.NotebookItem notebook:
+                                    case EjustLostAndFoundHub.Models.NotebookItem notebook:
                                         <strong>Color:</strong>
                                         @notebook.NotebookColor
                                         break;

@@ -1,5 +1,5 @@
-﻿using EjustRecoveryHub.Data;
-using EjustRecoveryHub.Models;
+﻿using EjustLostAndFoundHub.Data;
+using EjustLostAndFoundHub.Models;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace EjustRecoveryHub.Controllers
+namespace EjustLostAndFoundHub.Controllers
 {
     public class ItemsController : Controller
     {

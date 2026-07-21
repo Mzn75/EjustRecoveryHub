@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using EjustRecoveryHub.Data;
-using EjustRecoveryHub.Models;
-using static EjustRecoveryHub.Models.ItemViewModel;
+using EjustLostAndFoundHub.Data;
+using EjustLostAndFoundHub.Models;
+using static EjustLostAndFoundHub.Models.ItemViewModel;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EjustRecoveryHub.Controllers
+namespace EjustLostAndFoundHub.Controllers
 {
     public class SearchController : Controller
     {

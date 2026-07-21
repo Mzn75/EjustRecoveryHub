@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.AspNetCore.DataProtection;
-using EjustRecoveryHub.Data;
+using EjustLostAndFoundHub.Data;
 
 // Intialize the web application builder with default configurations and services
 var builder = WebApplication.CreateBuilder(args);

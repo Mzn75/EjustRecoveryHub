@@ -1,4 +1,4 @@
-﻿@model EjustRecoveryHub.Models.ItemModel
+﻿@model EjustLostAndFoundHub.Models.ItemModel
 
 @{
     ViewData["Title"] = "Item Details";
@@ -31,11 +31,11 @@
                     string iconClass = "fa-box";
                     switch (Model)
                     {
-                        case EjustRecoveryHub.Models.IdItem: iconClass = "fa-id-card"; break;
-                        case EjustRecoveryHub.Models.WalletItem: iconClass = "fa-wallet"; break;
-                        case EjustRecoveryHub.Models.DeviceItem: iconClass = "fa-mobile-screen"; break;
-                        case EjustRecoveryHub.Models.JewelryItem: iconClass = "fa-ring"; break;
-                        case EjustRecoveryHub.Models.NotebookItem: iconClass = "fa-book"; break;
+                        case EjustLostAndFoundHub.Models.IdItem: iconClass = "fa-id-card"; break;
+                        case EjustLostAndFoundHub.Models.WalletItem: iconClass = "fa-wallet"; break;
+                        case EjustLostAndFoundHub.Models.DeviceItem: iconClass = "fa-mobile-screen"; break;
+                        case EjustLostAndFoundHub.Models.JewelryItem: iconClass = "fa-ring"; break;
+                        case EjustLostAndFoundHub.Models.NotebookItem: iconClass = "fa-book"; break;
                     }
 
                     <!-- Display the fallback icon -->
@@ -67,19 +67,19 @@
                             @* Set Title based on item type *@
                             @switch (Model)
                             {
-                                case EjustRecoveryHub.Models.IdItem idCard:
+                                case EjustLostAndFoundHub.Models.IdItem idCard:
                                     @idCard.IdName
                                     break;
-                                case EjustRecoveryHub.Models.DeviceItem device:
+                                case EjustLostAndFoundHub.Models.DeviceItem device:
                                     @($"{device.DeviceBrand} {device.DeviceModel}")
                                     break;
-                                case EjustRecoveryHub.Models.WalletItem wallet:
+                                case EjustLostAndFoundHub.Models.WalletItem wallet:
                                     @($"{wallet.WalletColor} Wallet")
                                     break;
-                                case EjustRecoveryHub.Models.JewelryItem jewelry:
+                                case EjustLostAndFoundHub.Models.JewelryItem jewelry:
                                     @($"{jewelry.JewelryMaterial} {jewelry.JewelryType}")
                                     break;
-                                case EjustRecoveryHub.Models.NotebookItem notebook:
+                                case EjustLostAndFoundHub.Models.NotebookItem notebook:
                                     @($"{notebook.NotebookColor} Notebook")
                                     break;
                                 default:

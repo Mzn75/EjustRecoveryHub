@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using EjustRecoveryHub.Models;
+using EjustLostAndFoundHub.Models;
 
-namespace EjustRecoveryHub.Data
+namespace EjustLostAndFoundHub.Data
 {
     public class ApplicationDbContext : DbContext
     {

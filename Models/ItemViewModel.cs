@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EjustRecoveryHub.Models
+namespace EjustLostAndFoundHub.Models
 {
     public class ItemViewModel
     {

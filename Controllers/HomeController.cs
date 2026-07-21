@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using EjustRecoveryHub.Models;
+using EjustLostAndFoundHub.Models;
 using System.Diagnostics;
 
-namespace EjustRecoveryHub.Controllers
+namespace EjustLostAndFoundHub.Controllers
 {
     public class HomeController : Controller
     {

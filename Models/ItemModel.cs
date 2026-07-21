@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace EjustRecoveryHub.Models
+namespace EjustLostAndFoundHub.Models
 {
 
     public abstract class ItemModel

@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace EjustRecoveryHub.Migrations
+namespace EjustLostAndFoundHub.Migrations
 {
     /// <inheritdoc />
     public partial class AddContactEmail : Migration

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace EjustRecoveryHub.Migrations
+namespace EjustLostAndFoundHub.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

@@ -1,8 +1,8 @@
-﻿using EjustRecoveryHub.Models;
+﻿using EjustLostAndFoundHub.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace EjustRecoveryHub.Models
+namespace EjustLostAndFoundHub.Models
 {
     // Tells Entity Framework to make a separate relational table just for devices
     [Table("DeviceItems")]
